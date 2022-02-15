@@ -1,16 +1,22 @@
 const moongose = require('mongoose');
 
 const propertySchema = new moongose.Schema({
-  name: {
+  typeProperty: {
     type: String,
-    minlength: 5,
-    required: true,
+    enum: {
+      values: ['casa', 'apartamento', 'local', 'finca'],
+      message: '{VALUE} is not supported',
+    },
   },
   date: {
     type: Date,
     default: Date.now,
   },
-  ubication: String,
+  ubication: {
+    city: { type: String, required: true },
+    neighbourhooh: { type: String, required: true },
+    adress: { type: String, required: true },
+  },
   images: [String],
   state: {
     type: String,
@@ -20,28 +26,30 @@ const propertySchema = new moongose.Schema({
     },
     default: 'available',
   },
-  rentalPrice: Number,
-  reviews: [{
-    user: String,
-    content: String,
-    score: {
-      type: Number,
-      min: 0,
-      max: 5,
+  rentalPrice: String,
+  reviews: [
+    {
+      user: String,
+      content: String,
+      score: {
+        type: Number,
+        min: 0,
+        max: 5,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-  }],
+  ],
   description: String,
   details: {
-    area: Number,
-    rooms: Number,
-    baths: Number,
+    area: String,
+    rooms: String,
+    baths: String,
     garage: Boolean,
   },
-  ouner: String,
+  agentID: String,
 });
 
 propertySchema.set('toJSON', {
