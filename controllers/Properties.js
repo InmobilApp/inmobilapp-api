@@ -27,7 +27,7 @@ propertyRouter.get('/:id', (req, res, next) => {
 });
 
 propertyRouter.put('/:id', (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   delete req.body.id;
   const property = {

@@ -18,10 +18,21 @@ const propertySchema = new moongose.Schema({
       values: ['available', 'unavailable', 'reserved'],
       message: '{VALUE} is not supported',
     },
+    default: 'available',
   },
   rentalPrice: Number,
   reviews: [{
-    user: String, content: String, score: Number, date: Date,
+    user: String,
+    content: String,
+    score: {
+      type: Number,
+      min: 0,
+      max: 5,
+    },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
   }],
   description: String,
   details: {
@@ -32,6 +43,14 @@ const propertySchema = new moongose.Schema({
     type: String,
   },
   ouner: String,
+});
+
+propertySchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
 });
 
 module.exports = moongose.model('Property', propertySchema);
