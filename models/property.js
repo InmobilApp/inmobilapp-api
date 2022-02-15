@@ -40,7 +40,6 @@ const propertySchema = new moongose.Schema({
     rooms: Number,
     baths: Number,
     garage: Boolean,
-    type: String,
   },
   ouner: String,
 });
