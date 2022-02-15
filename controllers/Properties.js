@@ -24,11 +24,10 @@ propertyRouter.get('/:id', async (req, res) => {
 });
 
 propertyRouter.put('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id, ...newPropertyInfo } = req.body;
 
-  delete req.body.id;
   const property = {
-    ...req.body,
+    ...newPropertyInfo,
   };
 
   const updateProperty = await Property.findByIdAndUpdate(id, property, {
