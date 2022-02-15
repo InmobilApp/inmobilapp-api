@@ -44,4 +44,11 @@ propertyRouter.delete('/:id', async (req, res) => {
   res.status(204).end();
 });
 
+propertyRouter.get('/search', async (req, res) => {
+  const { name } = req.query;
+  await Property.findOne('name', new RegExp(name, 'i'), (err, docs) => {
+    res.json(docs);
+  });
+});
+
 module.exports = propertyRouter;
