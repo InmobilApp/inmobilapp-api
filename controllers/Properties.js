@@ -1,32 +1,29 @@
 const propertyRouter = require('express').Router();
 const Property = require('../models/property');
 
-propertyRouter.get('/', (req, res) => {
-  Property.find({}).then((result) => {
-    res.json(result);
-  });
+propertyRouter.get('/', async (req, res) => {
+  const properties = await Property.find({});
+
+  res.json(properties);
 });
 
-propertyRouter.post('/', (req, res, next) => {
+propertyRouter.post('/', async (req, res) => {
   const property = new Property(req.body);
 
-  property
-    .save()
-    .then((savedProperty) => {
-      res.status(201).json(savedProperty);
-    })
-    .catch((err) => next(err));
+  const savedProperty = await property.save();
+  res.status(201).json(savedProperty);
 });
 
-propertyRouter.get('/:id', (req, res, next) => {
+propertyRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  Property.findById(id)
-    .then((property) => (property ? res.json(property) : res.status(404).end()))
-    .catch((err) => next(err));
+  const property = await Property.findById(id);
+
+  if (property) return res.json(property);
+  return res.status(404).end();
 });
 
-propertyRouter.put('/:id', (req, res, next) => {
+propertyRouter.put('/:id', async (req, res) => {
   const { id } = req.params;
 
   delete req.body.id;
@@ -34,21 +31,17 @@ propertyRouter.put('/:id', (req, res, next) => {
     ...req.body,
   };
 
-  Property.findByIdAndUpdate(id, property, { new: true })
-    .then((updateProperty) => {
-      res.json(updateProperty);
-    })
-    .catch((err) => next(err));
+  const updateProperty = await Property.findByIdAndUpdate(id, property, {
+    new: true,
+  });
+  res.json(updateProperty);
 });
 
-propertyRouter.delete('/:id', (req, res, next) => {
+propertyRouter.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  Property.findByIdAndRemove(id)
-    .then(() => {
-      res.status(204).end();
-    })
-    .catch((err) => next(err));
+  await Property.findByIdAndRemove(id);
+  res.status(204).end();
 });
 
 module.exports = propertyRouter;
