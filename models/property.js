@@ -1,4 +1,5 @@
 const moongose = require('mongoose');
+// const { Schema } = require('mongoose');
 
 const propertySchema = new moongose.Schema({
   typeProperty: {
@@ -48,8 +49,11 @@ const propertySchema = new moongose.Schema({
     rooms: String,
     baths: String,
     garage: Boolean,
-  },
-  agentID: String,
+  }, /* ,
+  agentID: {
+    type: Schema.Types.ObjectId,
+    ref: 'Agent',
+  }, */
 });
 
 propertySchema.set('toJSON', {

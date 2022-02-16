@@ -1,22 +1,17 @@
 const adminRouter = require('express').Router();
 const Admin = require('../models/admin');
 
-adminRouter.get('/', (req, res) => {
-  Admin.find({}).then((result) => {
-    res.json(result);
-  });
+adminRouter.get('/', async (req, res) => {
+  const admins = await Admin.find({}).populate('Agents');
+
+  res.json(admins);
 });
 
-adminRouter.post('/', (req, res) => {
-  const { name, password, email } = req.body;
+adminRouter.post('/', async (req, res) => {
+  const admin = new Admin(req.body);
 
-  const admin = new Admin({
-    name, password, email,
-  });
-
-  admin.save().then((savedAdmin) => {
-    res.status(201).json(savedAdmin);
-  });
+  const savedAdmin = await admin.save();
+  res.status(201).json(savedAdmin);
 });
 
 module.exports = adminRouter;
