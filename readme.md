@@ -1,97 +1,173 @@
-https://github.com/InmobilApp
-https://inmobil-app.herokuapp.com/
+# Pages
 
-Post ruta: /api/properties
-Unico dato requerido para hacer un post "name",
-en la propiedad state: solo se permite ('available', 'unavailable', 'reserved') por defecto es 'available'.
-```json
-{
-  "name": "Casa de familia",
-  "ubication": "Calle 33B 1B12",
-  "images": [
-    "https://www.construyehogar.com/wp-content/uploads/2014/10/Decoraci%C3%B3n-de-interiores-de-departamento.jpg",
-    "djasjdasi"
-  ],
-  "rentalPrice": 500000,
-  "reviews": [{ "user": "Pedro", "content": "Muy mala", "score": 2 }],
-  "description": "Casa en buen estado",
-  "details": {
-    "area": 120,
-    "rooms": 4,
-    "baths": 2,
-    "garage": true
+GitHub: https://github.com/InmobilApp
+
+Deploy: https://inmobil-app.herokuapp.com/
+
+# Schema
+
+## Property Schema
+
+```javascript
+const propertySchema = new moongose.Schema({
+  typeProperty: {
+    type: String,
+    enum: {
+      values: ["casa", "apartamento", "local", "finca"],
+      message: "{VALUE} is not supported",
+    },
   },
-  "ouner": "Matheo"
-}
-```
-
-return:
-
-```json
-{
-  "name": "Casa de familia",
-  "ubication": "Calle 33B 1B12",
-  "images": [
-    "https://www.construyehogar.com/wp-content/uploads/2014/10/Decoraci%C3%B3n-de-interiores-de-departamento.jpg",
-    "djasjdasi"
-  ],
-  "state": "available",
-  "rentalPrice": 500000,
-  "reviews": [
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  ubication: {
+    city: { type: String, required: true },
+    neighbourhooh: { type: String, required: true },
+    adress: { type: String, required: true },
+  },
+  images: [String],
+  state: {
+    type: String,
+    enum: {
+      values: ["available", "unavailable", "reserved"],
+      message: "{VALUE} is not supported",
+    },
+    default: "available",
+  },
+  rentalPrice: String,
+  reviews: [
     {
-      "user": "Pedro",
-      "content": "Muy mala",
-      "score": 2,
-      "_id": "620b201f8dfb8640ef329e78",
-      "date": "2022-02-15T03:38:07.353Z"
-    }
+      user: String,
+      content: String,
+      score: {
+        type: Number,
+        min: 0,
+        max: 5,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
   ],
-  "description": "Casa en buen estado",
-  "details": {
-    "area": 120,
-    "rooms": 4,
-    "baths": 2,
-    "garage": true
+  description: String,
+  details: {
+    area: String,
+    rooms: String,
+    baths: String,
+    garage: Boolean,
   },
-  "ouner": "Matheo",
-  "date": "2022-02-15T03:38:07.356Z",
-  "id": "620b201f8dfb8640ef329e77"
+  agentID: String,
+});
+```
+
+# Routes
+
+Cuando pasa una ruta desconocida para el "Servidor"
+
+```javascript
+response.status(404).send({ error: "unknown endpoint" });
+```
+
+Cuando pasas un "id" no valido va a retornar
+
+```javascript
+response.status(400).send({ error: "malformatted id" });
+```
+
+Cuando ocurre un error al hacer un PUT o POST con el Schema va a retornar un message relacionado con el error.
+
+```javascript
+response.status(400).json({ error: error.message });
+```
+
+## Rutas "/api/properties"
+
+### GET "/api/properties"
+
+Retorna un arreglo con todas las propiedades guardadas en la base de datos.
+
+### POST "/api/properties"
+
+Por medio de "body" recibe un objeto con las propiedades requeridas para crear una propiedad, algunas propiedades se inicializan por defecto como la fecha, y el estado de la propiedad, por defecto es "avalidable".
+
+```javascript
+{
+  typeProperty: "casa",
+  ubication: {
+    city: "Bogota",
+    neighbourhooh: "usme",
+    adress: "Cll 22B etc...",
+  },
+  images: ["url", "url1"],
+  rentalPrice: "500",
+  description: "Decripcion del inmueble",
+  details: {
+    area: "30",
+    rooms: "2",
+    baths: "2",
+    garage: true,
+  }
+}
+...
+
+...
+"Objeto retornado al hacer este post"
+{
+    "typeProperty": "casa",
+    "ubication": {
+        "city": "Bogota",
+        "neighbourhooh": "usme",
+        "adress": "Cll 22B etc..."
+    },
+    "images": [
+        "url",
+        "url1"
+    ],
+    "state": "available",
+    "rentalPrice": "500",
+    "description": "Decripcion del inmueble",
+    "details": {
+        "area": "30",
+        "rooms": "2",
+        "baths": "2",
+        "garage": true
+    },
+    "date": "2022-02-16T02:40:10.671Z",
+    "reviews": [],
+    "id": "620c640ab2c22c087c7d326d"
 }
 ```
 
-get /api/properties/620b201f8dfb8640ef329e77
+### GET "/api/properties/620c640ab2c22c087c7d326d"
+
+Al hacer un get con "id" a "/api/properties/:id" retorna la propiedad que coincida con ese ID.
 
 ```json
 {
+  "ubication": {
+    "city": "Bogota",
+    "neighbourhooh": "usme",
+    "adress": "Cll 22B etc..."
+  },
   "details": {
-    "area": 120,
-    "rooms": 4,
-    "baths": 2,
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
     "garage": true
   },
-  "name": "Casa de familia",
-  "ubication": "Calle 33B 1B12",
-  "images": [
-    "https://www.construyehogar.com/wp-content/uploads/2014/10/Decoraci%C3%B3n-de-interiores-de-departamento.jpg",
-    "djasjdasi"
-  ],
+  "typeProperty": "casa",
+  "images": ["url", "url1"],
   "state": "available",
-  "rentalPrice": 500000,
-  "reviews": [
-    {
-      "user": "Pedro",
-      "content": "Muy mala",
-      "score": 2,
-      "_id": "620b201f8dfb8640ef329e78",
-      "date": "2022-02-15T03:38:07.353Z"
-    }
-  ],
-  "description": "Casa en buen estado",
-  "ouner": "Matheo",
-  "date": "2022-02-15T03:38:07.356Z",
-  "id": "620b201f8dfb8640ef329e77"
+  "rentalPrice": "500",
+  "description": "Decripcion del inmueble",
+  "date": "2022-02-16T02:40:10.671Z",
+  "reviews": [],
+  "id": "620c640ab2c22c087c7d326d"
 }
 ```
 
-get: "/api/properties"
-return: Array[property]
+### DELETE "/api/properties/620c640ab2c22c087c7d326d"
+
+Borra la propiedad con el id pasado por parametro de la base de datos.
