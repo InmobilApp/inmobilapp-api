@@ -7,6 +7,7 @@ const config = require("./utils/config");
 const logger = require("./utils/logger");
 const adminRouter = require("./controllers/admins");
 const propertyRouter = require("./controllers/Properties");
+const agentsRouter = require("./controllers/agents");
 const middleware = require("./utils/middleware");
 
 const app = express();
@@ -28,6 +29,7 @@ app.set("port", config.PORT);
 
 app.use("/api/admins", adminRouter);
 app.use("/api/properties", propertyRouter);
+app.use("/api/agents", agentsRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
