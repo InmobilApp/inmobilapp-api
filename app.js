@@ -1,30 +1,35 @@
-const express = require('express');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
-require('express-async-errors');
-const cors = require('cors');
-const config = require('./utils/config');
-const logger = require('./utils/logger');
-const adminRouter = require('./controllers/admins');
-const propertyRouter = require('./controllers/Properties');
-const middleware = require('./utils/middleware');
+const express = require("express");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+require("express-async-errors");
+const cors = require("cors");
+const config = require("./utils/config");
+const logger = require("./utils/logger");
+const adminRouter = require("./controllers/admins");
+const propertyRouter = require("./controllers/Properties");
+const agentsRouter = require("./controllers/agents");
+const middleware = require("./utils/middleware");
 
 const app = express();
 
-mongoose.connect(config.MONGODB_URI).then(() => {
-  logger.info('connected to MongoDB');
-}).catch((error) => {
-  logger.error('error connecting to MongoDB:', error.message);
-});
+mongoose
+  .connect(config.MONGODB_URI)
+  .then(() => {
+    logger.info("connected to MongoDB", config.MONGODB_URI);
+  })
+  .catch((error) => {
+    logger.error("error connecting to MongoDB:", error.message);
+  });
 
 app.use(cors());
-app.use(express.static('build'));
+app.use(express.static("build"));
 app.use(express.json());
-app.use(morgan('dev'));
-app.set('port', config.PORT);
+app.use(morgan("dev"));
+app.set("port", config.PORT);
 
-app.use('/api/admins', adminRouter);
-app.use('/api/properties', propertyRouter);
+app.use("/api/admins", adminRouter);
+app.use("/api/properties", propertyRouter);
+app.use("/api/agents", agentsRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
