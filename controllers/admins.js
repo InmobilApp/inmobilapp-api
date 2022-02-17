@@ -17,7 +17,7 @@ adminRouter.post('/', async (req, res) => {
 adminRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const admin = await Admin.findById(id).populate('agents');
+  const admin = await Admin.findById(id).populate('agentsID');
 
   if (admin) return res.json(admin);
   return res.status(404).end();
