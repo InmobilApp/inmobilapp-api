@@ -15,13 +15,9 @@ agentsRouter.get("/:id", async (req, res) => {
 });
 
 agentsRouter.put("/:id", async (req, res) => {
-  const { id, ...newAgentInfo } = req.body;
+  const { id, ...update } = req.body;
 
-  const agent = {
-    ...newAgentInfo,
-  };
-
-  const agentUpdated = await Agent.findByIdAndUpdate(id, agent, {
+  const agentUpdated = await Agent.findByIdAndUpdate(id, update, {
     new: true,
   });
   res.json(agentUpdated).end();
