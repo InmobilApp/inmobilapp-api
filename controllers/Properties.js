@@ -1,5 +1,6 @@
 const propertyRouter = require('express').Router();
 const Property = require('../models/property');
+const Agent = require('../models/admin');
 
 propertyRouter.get('/', async (req, res) => {
   const properties = await Property.find({});
@@ -8,16 +9,22 @@ propertyRouter.get('/', async (req, res) => {
 });
 
 propertyRouter.post('/', async (req, res) => {
-  const property = new Property(req.body);
+  const { agentID } = req.body;
 
+  const agent = await Agent.findById(agentID);
+  const property = new Property(req.body);
   const savedProperty = await property.save();
+
+  agent.properties = agent.properties.concat(savedProperty._id);
+  await agent.save();
+
   res.status(201).json(savedProperty);
 });
 
 propertyRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const property = await Property.findById(id);
+  const property = await Property.findById(id).populate('Agents');
 
   if (property) return res.json(property);
   return res.status(404).end();
