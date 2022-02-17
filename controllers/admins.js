@@ -2,7 +2,7 @@ const adminRouter = require('express').Router();
 const Admin = require('../models/admin');
 
 adminRouter.get('/', async (req, res) => {
-  const admins = await Admin.find({}).populate('Agents');
+  const admins = await Admin.find({}).populate('agents');
 
   res.json(admins);
 });
