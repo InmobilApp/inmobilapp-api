@@ -15,6 +15,9 @@ clientsRouter.post("/", async (req, res) => {
     paymentIssued,
   } = req.body;
 
+  if (!propertyID)
+    res.status(400).json({ text: "Please send the propertyID" }).end();
+
   const property = await Property.findById(propertyID);
 
   const newClient = new Client({
@@ -42,7 +45,9 @@ clientsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   const clients = await Client.findById(id).populate("propertyID");
-  res.json(clients).end();
+  clients
+    ? res.json(clients).end()
+    : res.status(404).json({ text: "The client does not exist" });
 });
 
 clientsRouter.put("/:id", async (req, res) => {
@@ -51,7 +56,10 @@ clientsRouter.put("/:id", async (req, res) => {
   const clientUpdated = await Client.findByIdAndUpdate(id, update, {
     new: true,
   });
-  res.json(clientUpdated).end();
+
+  clientUpdated
+    ? res.json(clientUpdated).end()
+    : res.status(404).json({ text: "The client does not exist" });
 });
 
 clientsRouter.delete("/:id", async (req, res) => {

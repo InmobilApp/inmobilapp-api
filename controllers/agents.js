@@ -11,7 +11,9 @@ agentsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   const agent = await Agent.findById(id).populate("properties");
-  agent ? res.json(agent).end() : res.status(404).end();
+  agent
+    ? res.json(agent).end()
+    : res.status(404).json({ test: "The agent does not exist" }).end();
 });
 
 agentsRouter.put("/:id", async (req, res) => {
@@ -20,7 +22,9 @@ agentsRouter.put("/:id", async (req, res) => {
   const agentUpdated = await Agent.findByIdAndUpdate(id, update, {
     new: true,
   });
-  res.json(agentUpdated).end();
+  agentUpdated
+    ? res.json(agentUpdated).end()
+    : res.status(404).json({ test: "The agent does not exist" }).end();
 });
 
 agentsRouter.delete("/:id", async (req, res) => {

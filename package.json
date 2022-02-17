@@ -12,7 +12,8 @@
     "logs:prod": "heroku logs --tail",
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --detectOpenHandles",
-    "test:agents": "cross-env NODE_ENV=test PORT=3002 jest --verbose --silent tests/agents.test.js",
+    "test:agents": "cross-env NODE_ENV=test PORT=3002 jest --verbose --silent --watch tests/agents.test.js",
+    "test:clients": "cross-env NODE_ENV=test PORT=3002 jest --verbose --silent --watch tests/clients.test.js",
     "test:watch": "npm run test -- --watchAll"
   },
   "keywords": [],
