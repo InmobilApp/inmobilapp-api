@@ -233,14 +233,13 @@ response.status(400).send({ error: "malformatted id" });
 
 Cuando ocurre un error al hacer un PUT o POST con el Schema va a retornar un message relacionado con el error.
 
-```javascript
 response.status(400).json({ error: error.message });
 
 # Rutas "api/agents"
 
 ### GET "api/agents"
 
-Retorna un arreglo con todas las propiedades guardadas en la base de datos y su relacion con una propiedad
+Retorna un arreglo con todas los agentes guardados en la base de datos y su relacion con una propiedad
 
 ```json
 {
