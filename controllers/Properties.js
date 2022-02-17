@@ -1,6 +1,6 @@
 const propertyRouter = require('express').Router();
 const Property = require('../models/property');
-const Agent = require('../models/admin');
+const Agent = require('../models/agent');
 
 propertyRouter.get('/', async (req, res) => {
   const properties = await Property.find({});
