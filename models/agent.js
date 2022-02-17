@@ -16,13 +16,12 @@ const agentSchema = new Schema({
   },
   phone: String,
   age: String,
-  properties: [String],
-  // properties: [
-  //   {
-  //     type: Schema.Types.ObjectID,
-  //     ref: "Property",
-  //   },
-  // ],
+  properties: [
+    {
+      type: Schema.Types.ObjectID,
+      ref: "Property",
+    },
+  ],
   permissions: {
     crudProperty: Boolean,
   },
