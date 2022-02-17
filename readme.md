@@ -4,9 +4,15 @@ GitHub: https://github.com/InmobilApp
 
 Deploy: https://inmobil-app.herokuapp.com/
 
-# Schema
+# Indice
 
-## Property Schema
+<ul>
+  <li><a href="#property-schema-refs">Property Schema</a></li>
+</ul>
+
+# Schemas
+
+<h3 id="property-schema-refs"><a href="#property-schema-refs">Property Schema</a></h3>
 
 ```javascript
 const propertySchema = new moongose.Schema({
@@ -58,7 +64,10 @@ const propertySchema = new moongose.Schema({
     baths: String,
     garage: Boolean,
   },
-  agentID: String,
+  agentID: {
+    type: Schema.Types.ObjectId,
+    ref: "Agent",
+  },
 });
 ```
 

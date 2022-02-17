@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const agentSchema = new Schema({
+const clientSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -16,27 +16,30 @@ const agentSchema = new Schema({
   },
   phone: String,
   age: String,
-  properties: [
+  permissions: {
+    crudClient: Boolean,
+  },
+  payDay: String,
+  paymentIssued: [
     {
-      type: Schema.Types.ObjectID,
-      ref: "Property",
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
-  permissions: {
-    crudProperty: Boolean,
-  },
-  admindID: {
-    type: Schema.Types.ObjectID,
-    ref: "Admin",
+  propertyID: {
+    type: Schema.Types.ObjectId,
+    ref: "Property",
   },
 });
 
-agentSchema.set("toJSON", {
+clientSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id;
+    returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
   },
 });
 
-module.exports = model("Agent", agentSchema);
+module.exports = model("Client", clientSchema);
