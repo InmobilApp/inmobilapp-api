@@ -10,7 +10,7 @@ agentsRouter.get("/", async (req, res) => {
 agentsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const agent = await Agent.findById(id);
+  const agent = await Agent.findById(id).populate("properties");
   agent ? res.json(agent).end() : res.status(404).end();
 });
 
