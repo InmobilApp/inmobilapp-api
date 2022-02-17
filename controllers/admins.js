@@ -1,13 +1,17 @@
-const adminRouter = require('express').Router();
-const Admin = require('../models/admin');
+const adminRouter = require("express").Router();
+const Admin = require("../models/admin");
 
+<<<<<<< HEAD
 adminRouter.get('/', async (req, res) => {
+=======
+adminRouter.get("/", async (req, res) => {
+>>>>>>> babaquero
   const admins = await Admin.find({});
 
   res.json(admins);
 });
 
-adminRouter.post('/', async (req, res) => {
+adminRouter.post("/", async (req, res) => {
   const admin = new Admin(req.body);
 
   const savedAdmin = await admin.save();
