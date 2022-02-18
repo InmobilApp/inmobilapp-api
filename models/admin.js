@@ -2,7 +2,10 @@ const moongose = require('mongoose');
 
 const adminSchema = new moongose.Schema({
   name: String,
-  DNI: String,
+  DNI: {
+    type: String,
+    unique: true,
+  },
   adress: String,
   phone: String,
   age: {
