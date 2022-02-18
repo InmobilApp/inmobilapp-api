@@ -295,24 +295,24 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
 
 Por medio de "body" recibe un objeto con las propiedades requeridas para crear una propiedad, algunas propiedades se inicializan por defecto, como lo son la fecha, y el estado de la propiedad, entre otras. Para crear la propiedad se nesecita un Agente el cual es el encargado de esta, para ello solo nesecitan pasar el id del agente.
 
-```javascript
+```json
 {
-  typeProperty: "casa",
-  location: {
-    city: "Bogota",
-    neighborhood: "usme",
-    address: "Cll 22B etc...",
+  "typeProperty": "casa",
+  "location": {
+    "city": "Bogota",
+    "neighborhood": "usme",
+    "address": "Cll 22B etc..."
   },
-  images: ["url", "url1"],
-  rentalPrice: "500",
-  description: "Decripcion del inmueble",
-  details: {
-    area: "30",
-    rooms: "2",
-    baths: "2",
-    garage: true,
+  "images": ["url", "url1"],
+  "rentalPrice": "500",
+  "description": "Decripcion del inmueble",
+  "details": {
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
+    "garage": true
   },
-  agentID: "620ebd5845ed0a43962601f8",
+  "agentID": "621001f99b52c4c41c827ca0"
 }
 ...
 
