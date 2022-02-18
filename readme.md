@@ -99,7 +99,7 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
 
 ### POST "/api/properties"
 
-Por medio de "body" recibe un objeto con las propiedades requeridas para crear una propiedad, algunas propiedades se inicializan por defecto como la fecha, y el estado de la propiedad, por defecto es "avalidable".
+Por medio de "body" recibe un objeto con las propiedades requeridas para crear una propiedad, algunas propiedades se inicializan por defecto como la fecha, y el estado de la propiedad, por defecto es "available" y para crear la propiedad tambien nesecita un Agente el cual es el responsable de esa propiedad, para ello solo nesecitan pasar el id del agente.
 
 ```javascript
 {
@@ -117,7 +117,8 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
     rooms: "2",
     baths: "2",
     garage: true,
-  }
+  },
+  agentID: "620ebd5845ed0a43962601f8",
 }
 ...
 

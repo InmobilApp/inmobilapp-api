@@ -24,7 +24,7 @@ propertyRouter.post('/', async (req, res) => {
 propertyRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const property = await Property.findById(id).populate('Agents');
+  const property = await Property.findById(id).populate('agentID');
 
   if (property) return res.json(property);
   return res.status(404).end();
