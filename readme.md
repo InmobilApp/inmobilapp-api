@@ -34,8 +34,11 @@ Deploy: https://inmobil-app.herokuapp.com/
 ```javascript
 const adminSchema = new moongose.Schema({
   name: String,
-  DNI: String,
-  adress: String,
+  DNI: {
+    type: String,
+    unique: true,
+  },
+  address: String,
   phone: String,
   age: {
     type: Number,
@@ -62,27 +65,27 @@ const propertySchema = new moongose.Schema({
   typeProperty: {
     type: String,
     enum: {
-      values: ["casa", "apartamento", "local", "finca"],
-      message: "{VALUE} is not supported",
+      values: ['casa', 'apartamento', 'local', 'finca'],
+      message: '{VALUE} is not supported',
     },
   },
   date: {
     type: Date,
     default: Date.now,
   },
-  ubication: {
+  location: {
     city: { type: String, required: true },
-    neighbourhooh: { type: String, required: true },
-    adress: { type: String, required: true },
+    neighborhood: { type: String, required: true },
+    address: { type: String, required: true },
   },
   images: [String],
   state: {
     type: String,
     enum: {
-      values: ["available", "unavailable", "reserved"],
-      message: "{VALUE} is not supported",
+      values: ['available', 'unavailable', 'reserved'],
+      message: '{VALUE} is not supported',
     },
-    default: "available",
+    default: 'available',
   },
   rentalPrice: String,
   reviews: [
@@ -109,7 +112,7 @@ const propertySchema = new moongose.Schema({
   },
   agentID: {
     type: Schema.Types.ObjectId,
-    ref: "Agent",
+    ref: 'Agent',
   },
 });
 ```
@@ -149,7 +152,7 @@ Retorna un arreglo con todos los admins guardados en la base de datos.
     },
     "name": "David",
     "DNI": "1117598847",
-    "adress": "...",
+    "address": "...",
     "phone": "322 548 7898",
     "age": 50,
     "agentsID": [],
@@ -166,7 +169,7 @@ Cuando se hace un POST de un Admin no, se nesecita especificar el Agent que tien
 {
   "name": "David",
   "DNI": "1117598847",
-  "adress": "...",
+  "address": "...",
   "phone": "322 548 7898",
   "age": 50,
   "permissions": {
@@ -181,7 +184,7 @@ Cuando se hace un POST de un Admin no, se nesecita especificar el Agent que tien
 {
   "name": "David",
   "DNI": "1117598847",
-  "adress": "...",
+  "address": "...",
   "phone": "322 548 7898",
   "age": 50,
   "permissions": {
@@ -205,7 +208,7 @@ Al hacer un get con "id" a "/api/admins/:id" retorna el admin que coincida con e
   },
   "name": "David",
   "DNI": "1117598847",
-  "adress": "...",
+  "address": "...",
   "phone": "322 548 7898",
   "age": 50,
   "agentsID": [],
@@ -228,10 +231,10 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
 ```json
 [
   {
-    "ubication": {
+    "location": {
       "city": "San luis",
-      "neighbourhooh": "barrio jardin",
-      "adress": "siempre viva 123"
+      "neighborhood": "barrio jardin",
+      "address": "siempre viva 123"
     },
     "date": null,
     "images": ["dkanvnifnbon", "fjioenaonjj", "fikmieijaij"],
@@ -242,10 +245,10 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
     "id": "620e50f466963436806d5aa1"
   },
   {
-    "ubication": {
+    "location": {
       "city": "Bogota",
-      "neighbourhooh": "usme",
-      "adress": "Cll 22B etc..."
+      "neighborhood": "usme",
+      "address": "Cll 22B etc..."
     },
     "details": {
       "area": "30",
@@ -264,10 +267,10 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
     "id": "620ed47c289ae07764681633"
   },
   {
-    "ubication": {
+    "location": {
       "city": "Bogota",
-      "neighbourhooh": "usme",
-      "adress": "Cll 22B etc..."
+      "neighborhood": "usme",
+      "address": "Cll 22B etc..."
     },
     "details": {
       "area": "30",
@@ -295,10 +298,10 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 ```javascript
 {
   typeProperty: "casa",
-  ubication: {
+  location: {
     city: "Bogota",
-    neighbourhooh: "usme",
-    adress: "Cll 22B etc...",
+    neighborhood: "usme",
+    address: "Cll 22B etc...",
   },
   images: ["url", "url1"],
   rentalPrice: "500",
@@ -316,10 +319,10 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 ...
 "Objeto retornado al hacer este post"
 {
-  "ubication": {
+  "location": {
     "city": "Bogota",
-    "neighbourhooh": "usme",
-    "adress": "Cll 22B etc..."
+    "neighborhood": "usme",
+    "address": "Cll 22B etc..."
   },
   "details": {
     "area": "30",
@@ -348,10 +351,10 @@ Al hacer un get con "id" a "/api/properties/:id" retorna la propiedad que coinci
 
 ```json
 {
-  "ubication": {
+  "location": {
     "city": "Bogota",
-    "neighbourhooh": "usme",
-    "adress": "Cll 22B etc..."
+    "neighborhood": "usme",
+    "address": "Cll 22B etc..."
   },
   "details": {
     "area": "30",
