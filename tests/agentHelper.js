@@ -1,6 +1,5 @@
 const { app } = require("../index");
 const supertest = require("supertest");
-const Agent = require("../models/Agent");
 const api = supertest(app);
 
 const initialAgents = [
