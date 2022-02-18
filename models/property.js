@@ -13,10 +13,10 @@ const propertySchema = new moongose.Schema({
     type: Date,
     default: Date.now,
   },
-  ubication: {
+  location: {
     city: { type: String, required: true },
-    neighbourhooh: { type: String, required: true },
-    adress: { type: String, required: true },
+    neighborhood: { type: String, required: true },
+    address: { type: String, required: true },
   },
   images: [String],
   state: {

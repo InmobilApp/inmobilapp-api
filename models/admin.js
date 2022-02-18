@@ -6,7 +6,7 @@ const adminSchema = new moongose.Schema({
     type: String,
     unique: true,
   },
-  adress: String,
+  address: String,
   phone: String,
   age: {
     type: Number,
