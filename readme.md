@@ -17,6 +17,14 @@ Deploy: https://inmobil-app.herokuapp.com/
   <li><a href="#post-api-property-refs">POST /api/properties</a></li>
   <li><a href="#get-api-property-id-refs">GET /api/properties/:id</a></li>
   <li><a href="#delete-api-properties-id-refs">DELETE /api/properties/:id</a></li>
+  <li><a href="#agent-schema-refs">AGENT SCHEMA</a></li>
+  <li><a href="#get-api-agents-refs">GET /api/agents</a></li>
+  <li><a href="#post-api-agents-refs">POST /api/agents</a></li>
+  <li><a href="#delete-api-agents-id-refs">DELETE /api/agents/:id</a></li>
+  <li><a href="#client-schema-refs">CLIENT SCHEMA</a></li>
+  <li><a href="#get-api-clients-refs">GET /api/clients</a></li>
+  <li><a href="#post-api-clients-refs">POST /api/clients</a></li>
+  <li><a href="#delete-api-clients-id-refs">DELETE /api/clients/:id</a></li>
 </ul>
 
 # Schemas
@@ -437,6 +445,8 @@ response.status(400).json({ error: error.message });
 
 ### GET "api/agents"
 
+<h3 id="get-api-agents-refs"><a href="#get-api-agents-refs">GET /api/agents</a></h3>
+
 Retorna un arreglo con todas los agentes guardados en la base de datos y su relacion con una propiedad
 
 ```json
@@ -458,7 +468,7 @@ Retorna un arreglo con todas los agentes guardados en la base de datos y su rela
 
 ### GET "api/agents/:id"
 
-Retorna un arreglo con todas las propiedades guardadas en la base de datos y su relacion con una propiedad (Muestra la info completa de esa propiedad)
+Retorna un JSON con la informacion completa de un agente guardado en la base de datos y su relacion con una propiedad (Muestra la info completa de esa propiedad)
 
 ```json
 {
@@ -501,7 +511,9 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos y su 
 
 ### POST "api/agents"
 
-Por medio de "body" recibe un objeto con las propiedades requeridas para crear una propiedad
+<h3 id="post-api-agents-refs"><a href="#post-api-agents-refs">POST /api/agents</a></h3>
+
+Por medio de "body" recibe un objeto con las propiedades requeridas para crear un agente
 
 ```javascript
 {
@@ -534,4 +546,197 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 
 ### DELETE "api/agents/620e808a8034ceb08eb309a8"
 
-Borra la propiedad con el id pasado por parametro de la base de datos.
+<h3 id="delete-api-agents-id-refs"><a href="#delete-api-agents-id-refs">DELETE /api/agents/:id</a></h3>
+
+Borra el agente con el id pasado por parametros.
+
+---
+
+<h3 id="client-schema-refs"><a href="#client-schema-refs">Client Schema</a></h3>
+
+```javascript
+const clientSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  dni: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  adress: {
+    type: String,
+    required: true,
+  },
+  phone: String,
+  age: String,
+  permissions: {
+    crudClient: Boolean,
+  },
+  payDay: String,
+  paymentIssued: [
+    {
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  propertyID: {
+    type: Schema.Types.ObjectId,
+    ref: "Property",
+  },
+});
+```
+
+# Errores
+
+Cuando pasa una ruta desconocida para el "Servidor"
+
+```javascript
+response.status(404).send({ error: "unknown endpoint" });
+```
+
+Cuando pasas un "id" no valido va a retornar
+
+```javascript
+response.status(400).send({ error: "malformatted id" });
+```
+
+Cuando ocurre un error al hacer un PUT o POST con el Schema va a retornar un message relacionado con el error.
+
+```javascript
+response.status(400).json({ error: error.message });
+```
+
+# Rutas "api/clients"
+
+### GET "api/clients"
+
+<h3 id="get-api-clients-refs"><a href="#get-api-clients-refs">GET /api/clients</a></h3>
+
+Retorna un arreglo con todas los clientes guardados en la base de datos y su relacion con una propiedad (propertyID)
+
+```json
+{
+        "permissions": {
+            "crudClient": true
+        },
+        "name": "Alexander",
+        "dni": "1012312432",
+        "adress": "Direccion random en Medellin",
+        "phone": "3194785677",
+        "age": "29",
+        "payDay": "16/02/2022",
+        "paymentIssued": [
+            {
+                "_id": "620ea3ef1e94bd784df9d473",
+                "date": "2022-02-17T19:37:19.985Z"
+            }
+        ],
+        "propertyID": "620e82348c77394d2ef5f506", ----> Relacion
+        "id": "620ea3ef1e94bd784df9d472"
+    }
+```
+
+### GET "api/clients/:id"
+
+Retorna un JSON con la informacion completa del cliente en la base de datos y su relacion con una propiedad (Muestra la info completa de esa propiedad)
+
+```JSON
+{
+    "permissions": {
+        "crudClient": true
+    },
+    "name": "Alexander",
+    "dni": "1012312432",
+    "adress": "Direccion random en Medellin",
+    "phone": "3194785677",
+    "age": "29",
+    "payDay": "16/02/2022",
+    "paymentIssued": [
+        {
+            "_id": "620ea3ef1e94bd784df9d473",
+            "date": "2022-02-17T19:37:19.985Z"
+        }
+    ],
+    "propertyID": {      ------> Info completa de la relacion
+        "ubication": {
+            "city": "Bogota",
+            "neighbourhooh": "usme",
+            "adress": "Cll 22B etc..."
+        },
+        "details": {
+            "area": "30",
+            "rooms": "2",
+            "baths": "2",
+            "garage": true
+        },
+        "typeProperty": "casa",
+        "images": [
+            "url",
+            "url1"
+        ],
+        "state": "available",
+        "rentalPrice": "500",
+        "description": "Decripcion del inmueble",
+        "agentID": "620e808a8034ceb08eb309a8",
+        "date": "2022-02-17T17:13:24.958Z",
+        "reviews": [],
+        "id": "620e82348c77394d2ef5f506"
+    },
+    "id": "620ea3ef1e94bd784df9d472"
+}
+```
+
+### POST "api/clients"
+
+<h3 id="post-api-clients-refs"><a href="#post-api-clients-refs">POST /api/clients</a></h3>
+
+Por medio de "body" recibe un objeto con las propiedades requeridas para crear un cliente
+
+```javascript
+{
+  propertyID: "620e819562c266edbeaca701", -----> Se debe enviar para hacer la relación
+  name: "David",
+  dni: "1245896152",
+  adress: "Direccion random en Barranquilla",
+  phone: "3228942237",
+  age: "22",
+  permission: {
+    crudClient: true
+  },
+  payDay: "16",
+  paymentIssued: [
+    {
+      date: "2022-01-16T02:40:10.671Z"
+    }
+  ]
+}
+...
+...
+"JSON retornado al hacer este post"
+{
+    "name": "David",
+    "dni": "1245896152",
+    "adress": "Direccion random en Barranquilla",
+    "phone": "3228942237",
+    "age": "22",
+    "payDay": "16",
+    "paymentIssued": [
+        {
+            "date": "2022-01-16T02:40:10.671Z",
+            "_id": "620fbfb5110661bb445f1a0c"
+        }
+    ],
+    "propertyID": "620e819562c266edbeaca701", ----> Relacion
+    "id": "620fbfb5110661bb445f1a0b"
+}
+```
+
+### DELETE "api/clients/620fbfb5110661bb445f1a0b"
+
+<h3 id="delete-api-clients-id-refs"><a href="#delete-api-clients-id-refs">DELETE /api/clients/:id</a></h3>
+
+Borra el cliente con el id pasado por parametros.
