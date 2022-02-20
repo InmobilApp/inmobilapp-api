@@ -16,8 +16,19 @@ adminRouter.post('/', async (req, res) => {
 
 adminRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
+  const { detailsAgent } = req.query;
 
-  const admin = await Admin.findById(id).populate('agentsID');
+  const admin = await Admin.findById(id);
+
+  if (admin) {
+    if (detailsAgent === 'true') {
+      res.json(await Admin.findById(id).populate('agentsID'));
+    } else {
+      res.json(admin);
+    }
+  } else {
+    res.status(404).end();
+  }
 
   if (admin) return res.json(admin);
   return res.status(404).end();
