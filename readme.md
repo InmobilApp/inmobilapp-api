@@ -17,13 +17,16 @@ Deploy: https://inmobil-app.herokuapp.com/
   <li><a href="#post-api-property-refs">POST /api/properties</a></li>
   <li><a href="#get-api-property-id-refs">GET /api/properties/:id</a></li>
   <li><a href="#delete-api-properties-id-refs">DELETE /api/properties/:id</a></li>
+  <br>
   <li><a href="#agent-schema-refs">AGENT SCHEMA</a></li>
   <li><a href="#get-api-agents-refs">GET /api/agents</a></li>
   <li><a href="#post-api-agents-refs">POST /api/agents</a></li>
   <li><a href="#delete-api-agents-id-refs">DELETE /api/agents/:id</a></li>
+  <br>
   <li><a href="#client-schema-refs">CLIENT SCHEMA</a></li>
   <li><a href="#get-api-clients-refs">GET /api/clients</a></li>
   <li><a href="#post-api-clients-refs">POST /api/clients</a></li>
+  <li><a href="#update-api-clients-refs">PUT /api/clients</a></li>
   <li><a href="#delete-api-clients-id-refs">DELETE /api/clients/:id</a></li>
 </ul>
 
@@ -65,8 +68,8 @@ const propertySchema = new moongose.Schema({
   typeProperty: {
     type: String,
     enum: {
-      values: ['casa', 'apartamento', 'local', 'finca'],
-      message: '{VALUE} is not supported',
+      values: ["casa", "apartamento", "local", "finca"],
+      message: "{VALUE} is not supported",
     },
   },
   date: {
@@ -82,10 +85,10 @@ const propertySchema = new moongose.Schema({
   state: {
     type: String,
     enum: {
-      values: ['available', 'unavailable', 'reserved'],
-      message: '{VALUE} is not supported',
+      values: ["available", "unavailable", "reserved"],
+      message: "{VALUE} is not supported",
     },
-    default: 'available',
+    default: "available",
   },
   rentalPrice: String,
   reviews: [
@@ -112,7 +115,7 @@ const propertySchema = new moongose.Schema({
   },
   agentID: {
     type: Schema.Types.ObjectId,
-    ref: 'Agent',
+    ref: "Agent",
   },
 });
 ```
@@ -568,7 +571,11 @@ const clientSchema = new Schema({
     required: true,
     unique: true,
   },
-  adress: {
+  password: {
+    type: String,
+    required: true,
+  },
+  address: {
     type: String,
     required: true,
   },
@@ -699,42 +706,56 @@ Retorna un JSON con la informacion completa del cliente en la base de datos y su
 
 Por medio de "body" recibe un objeto con las propiedades requeridas para crear un cliente
 
-```javascript
+```json
 {
-  propertyID: "620e819562c266edbeaca701", -----> Se debe enviar para hacer la relación
-  name: "David",
-  dni: "1245896152",
-  adress: "Direccion random en Barranquilla",
-  phone: "3228942237",
-  age: "22",
-  permission: {
-    crudClient: true
-  },
-  payDay: "16",
-  paymentIssued: [
-    {
-      date: "2022-01-16T02:40:10.671Z"
-    }
-  ]
+  "name": "Mauricio",
+  "dni": "39641178",
+  "password": "miClaveSegurita",
+  "address": "Direccion random en Colombia",
+  "phone": "3194785623",
+  "age": "28"
 }
 ...
 ...
 "JSON retornado al hacer este post"
 {
-    "name": "David",
-    "dni": "1245896152",
-    "adress": "Direccion random en Barranquilla",
-    "phone": "3228942237",
-    "age": "22",
-    "payDay": "16",
-    "paymentIssued": [
-        {
-            "date": "2022-01-16T02:40:10.671Z",
-            "_id": "620fbfb5110661bb445f1a0c"
-        }
-    ],
-    "propertyID": "620e819562c266edbeaca701", ----> Relacion
-    "id": "620fbfb5110661bb445f1a0b"
+    "name": "Mauricio",
+    "dni": "39641178",
+    "address": "Direccion random en Colombia",
+    "phone": "3194785623",
+    "age": "28",
+    "paymentIssued": [],
+    "id": "621028e3a791a20727b27883"
+}
+```
+
+### PUT "api/clients/621028e3a791a20727b27883"
+
+<h3 id="update-api-clients-id-refs"><a href="#update-api-clients-id-refs">UPDATE /api/clients/:id</a></h3>
+
+Por medio de "body" recibe un objeto con los datos que se quieren actualizar del cliente
+
+```JSON
+{
+   "propertyID": "620e811562c266edbeaca6fd",  --------> Importante enviar la ID de la propiedad para hacer la relacion!
+  "address": "Direccion random en Bogota",
+  "phone": "3194785677",
+  "age": "30",
+  "payDay": "17"
+}
+...
+...
+"JSON retornado al hacer el PUT"
+{
+    "name": "Mauricio",
+    "dni": "39641178",
+    "address": "Direccion random en Bogota",
+    "phone": "3194785677",
+    "age": "30",
+    "paymentIssued": [],
+    "payDay": "17",
+    "propertyID": "620e811562c266edbeaca6fd",                 ---------> Relacion hecha
+    "id": "621028e3a791a20727b27883"
 }
 ```
 

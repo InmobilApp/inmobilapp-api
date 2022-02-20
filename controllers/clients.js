@@ -1,35 +1,19 @@
+const bcrypt = require("bcrypt");
 const clientsRouter = require("express").Router();
 const Client = require("../models/client");
 const Property = require("../models/property");
 
 clientsRouter.post("/", async (req, res) => {
-  const {
-    propertyID,
-    name,
-    dni,
-    adress,
-    phone,
-    age,
-    permissions,
-    payDay,
-    paymentIssued,
-  } = req.body;
+  const { name, dni, password, address, phone, age } = req.body;
 
-  if (!propertyID)
-    res.status(400).json({ text: "Please send the propertyID" }).end();
-
-  const property = await Property.findById(propertyID);
-
+  const passwordHash = await bcrypt.hash(password, 10);
   const newClient = new Client({
-    propertyID: property._id,
     name,
     dni,
-    adress,
+    password: passwordHash,
+    address,
     phone,
     age,
-    permissions,
-    payDay,
-    paymentIssued,
   });
 
   const savedClient = await newClient.save();
@@ -51,7 +35,15 @@ clientsRouter.get("/:id", async (req, res) => {
 });
 
 clientsRouter.put("/:id", async (req, res) => {
-  const { id, ...update } = req.body;
+  const { id } = req.params;
+  let { ...update } = req.body;
+
+  if (!update.propertyID)
+    res.status(400).json({ text: "Please send the propertyID" }).end();
+
+  const property = await Property.findById(update.propertyID);
+
+  update.propertyID = property._id;
 
   const clientUpdated = await Client.findByIdAndUpdate(id, update, {
     new: true,
@@ -66,7 +58,7 @@ clientsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   await Client.findByIdAndDelete(id);
-  res.status(200).end();
+  res.json({ msg: "Agent deleted" }).end();
 });
 
 module.exports = clientsRouter;
