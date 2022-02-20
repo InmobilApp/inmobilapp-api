@@ -7,17 +7,24 @@ Deploy: https://inmobil-app.herokuapp.com/
 # Indice
 
 <ul>
-  <li><a href="#property-schema-refs">Property Schema</a></li>
   <li><a href="#admin-schema-refs">Admin Schema</a></li>
   <li><a href="#get-api-admins-refs">GET /api/admins</a></li>
   <li><a href="#post-api-admins-refs">POST /api/admins</a></li>
   <li><a href="#get-api-admins-id-refs">GET /api/admins/:id</a></li>
   <li><a href="#delete-api-admins-id-refs">DELETE /api/admins/:id</a></li>
+  <br>
+  <li><a href="#property-schema-refs">Property Schema</a></li>
   <li><a href="#get-api-property-refs">GET /api/properties</a></li>
   <li><a href="#post-api-property-refs">POST /api/properties</a></li>
   <li><a href="#get-api-property-id-refs">GET /api/properties/:id</a></li>
-  <li><a href="#put-api-property-id-refs">PUT /api/properties/:id</a></li> 
+  <li><a href="#put-api-property-id-refs">PUT /api/properties/:id</a></li>
   <li><a href="#delete-api-properties-id-refs">DELETE /api/properties/:id</a></li>
+  <br>
+  <li><a href="#review-schema-refs">Review Schema</a></li>
+  <li><a href="#get-api-review-refs">GET /api/reviews</a></li>
+  <li><a href="#get-api-review-id-refs">GET /api/reviews/:id</a></li>
+  <li><a href="#post-api-review-refs">POST /api/reviews</a></li>
+  <li><a href="#delete-api-review-id-refs">DELETE /api/reviews/:id</a></li>
   <br>
   <li><a href="#agent-schema-refs">AGENT SCHEMA</a></li>
   <li><a href="#get-api-agents-refs">GET /api/agents</a></li>
@@ -59,56 +66,6 @@ const adminSchema = new moongose.Schema({
       ref: "Agent",
     },
   ],
-});
-```
-
-<h3 id="property-schema-refs"><a href="#property-schema-refs">Property Schema</a></h3>
-
-```javascript
-const propertySchema = new moongose.Schema({
-  typeProperty: {
-    type: String,
-    enum: {
-      values: ["casa", "apartamento", "local", "finca"],
-      message: "{VALUE} is not supported",
-    },
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  location: {
-    city: { type: String, required: true },
-    neighborhood: { type: String, required: true },
-    address: { type: String, required: true },
-  },
-  images: [String],
-  state: {
-    type: String,
-    enum: {
-      values: ["available", "unavailable", "reserved"],
-      message: "{VALUE} is not supported",
-    },
-    default: "available",
-  },
-  rentalPrice: String,
-  reviews: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Review",
-    },
-  ],
-  description: String,
-  details: {
-    area: String,
-    rooms: String,
-    baths: String,
-    garage: Boolean,
-  },
-  agentID: {
-    type: Schema.Types.ObjectId,
-    ref: "Agent",
-  },
 });
 ```
 
@@ -219,6 +176,56 @@ Borra el admin con el id pasado por parametro de la base de datos.
 
 ## Ruta: "/api/properties"
 
+<h3 id="property-schema-refs"><a href="#property-schema-refs">Property Schema</a></h3>
+
+```javascript
+const propertySchema = new moongose.Schema({
+  typeProperty: {
+    type: String,
+    enum: {
+      values: ["casa", "apartamento", "local", "finca"],
+      message: "{VALUE} is not supported",
+    },
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  location: {
+    city: { type: String, required: true },
+    neighborhood: { type: String, required: true },
+    address: { type: String, required: true },
+  },
+  images: [String],
+  state: {
+    type: String,
+    enum: {
+      values: ["available", "unavailable", "reserved"],
+      message: "{VALUE} is not supported",
+    },
+    default: "available",
+  },
+  rentalPrice: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
+  description: String,
+  details: {
+    area: String,
+    rooms: String,
+    baths: String,
+    garage: Boolean,
+  },
+  agentID: {
+    type: Schema.Types.ObjectId,
+    ref: "Agent",
+  },
+});
+```
+
 <h3 id="get-api-property-refs"><a href="#get-api-property-refs">GET /api/properties</a></h3>
 
 Retorna un arreglo con todas las propiedades guardadas en la base de datos.
@@ -227,22 +234,30 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
 [
   {
     "location": {
-      "city": "San luis",
-      "neighborhood": "barrio jardin",
-      "address": "siempre viva 123"
+      "city": "Florencia",
+      "neighborhood": "La paz",
+      "address": "Cll 22B etc..."
     },
-    "date": null,
-    "images": ["dkanvnifnbon", "fjioenaonjj", "fikmieijaij"],
+    "details": {
+      "area": "30",
+      "rooms": "2",
+      "baths": "2",
+      "garage": true
+    },
+    "typeProperty": "local",
+    "images": ["url", "url1"],
     "state": "available",
-    "rentalPrice": "15000",
-    "description": "jijikokijijkoko",
-    "reviews": [],
-    "id": "620e50f466963436806d5aa1"
+    "rentalPrice": "500",
+    "reviews": ["621298d5cde25ed20f59771b", "621298ddcde25ed20f59771f"],
+    "description": "Decripcion del inmueble",
+    "agentID": "62129850cde25ed20f597711",
+    "date": "2022-02-20T19:38:01.097Z",
+    "id": "62129899cde25ed20f597717"
   },
   {
     "location": {
       "city": "Bogota",
-      "neighborhood": "usme",
+      "neighborhood": "Suba",
       "address": "Cll 22B etc..."
     },
     "details": {
@@ -255,16 +270,62 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
     "images": ["url", "url1"],
     "state": "available",
     "rentalPrice": "500",
+    "reviews": ["62129912cde25ed20f597727"],
     "description": "Decripcion del inmueble",
-    "agentID": "620ebd5845ed0a43962601f8",
-    "date": "2022-02-17T23:04:28.918Z",
-    "reviews": [],
-    "id": "620ed47c289ae07764681633"
+    "agentID": "62129850cde25ed20f597711",
+    "date": "2022-02-20T19:39:39.178Z",
+    "id": "621298fbcde25ed20f597723"
+  }
+]
+```
+
+GET a "/api/properties/?detailsReviews=true" retorna un arreglo con todas las propiedades guardadas en la base de datos y ademas con los detalles de las reviews hechas a esta.
+
+```json
+[
+  {
+    "location": {
+      "city": "Florencia",
+      "neighborhood": "La paz",
+      "address": "Cll 22B etc..."
+    },
+    "details": {
+      "area": "30",
+      "rooms": "2",
+      "baths": "2",
+      "garage": true
+    },
+    "typeProperty": "local",
+    "images": ["url", "url1"],
+    "state": "available",
+    "rentalPrice": "500",
+    "reviews": [
+      {
+        "user": "Pedro",
+        "score": 3,
+        "content": "Regular",
+        "porpertyID": "62129899cde25ed20f597717",
+        "date": "2022-02-20T19:39:01.315Z",
+        "id": "621298d5cde25ed20f59771b"
+      },
+      {
+        "user": "Maria",
+        "score": 5,
+        "content": "Regular",
+        "porpertyID": "62129899cde25ed20f597717",
+        "date": "2022-02-20T19:39:09.989Z",
+        "id": "621298ddcde25ed20f59771f"
+      }
+    ],
+    "description": "Decripcion del inmueble",
+    "agentID": "62129850cde25ed20f597711",
+    "date": "2022-02-20T19:38:01.097Z",
+    "id": "62129899cde25ed20f597717"
   },
   {
     "location": {
       "city": "Bogota",
-      "neighborhood": "usme",
+      "neighborhood": "Suba",
       "address": "Cll 22B etc..."
     },
     "details": {
@@ -277,11 +338,20 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
     "images": ["url", "url1"],
     "state": "available",
     "rentalPrice": "500",
+    "reviews": [
+      {
+        "user": "Dairo",
+        "score": 5,
+        "content": "Buena",
+        "porpertyID": "621298fbcde25ed20f597723",
+        "date": "2022-02-20T19:40:02.756Z",
+        "id": "62129912cde25ed20f597727"
+      }
+    ],
     "description": "Decripcion del inmueble",
-    "agentID": "620ebd5845ed0a43962601f8",
-    "date": "2022-02-18T02:31:17.152Z",
-    "reviews": [],
-    "id": "620f04f5820cd052940c9b4d"
+    "agentID": "62129850cde25ed20f597711",
+    "date": "2022-02-20T19:39:39.178Z",
+    "id": "621298fbcde25ed20f597723"
   }
 ]
 ```
@@ -577,51 +647,152 @@ Borra la propiedad con el id pasado por parametro de la base de datos y quita la
 
 ---
 
-get reviews
+<h3 id="review-schema-refs">
+<a href="#review-schema-refs">Review Schema</a>
+</h3>
+
+```javascript
+const reviewSchema = new moongose.Schema({
+  user: {
+    type: String,
+  },
+  score: {
+    type: Number,
+    min: 0,
+    max: 5,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  porpertyID: {
+    type: moongose.Schema.Types.ObjectId,
+    ref: "Property",
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+```
+
+<h3 id="get-api-review-refs">
+<a href="#get-api-review-refs">GET /api/reviews</a>
+</h3>
+
+Retorna un arreglo con todas las reviews de todas las propiedades.
 
 ```json
 [
   {
-    "user": "Dairo",
-    "score": 4,
-    "content": "No esta Mal",
-    "porpertyID": "6212720c6ec04903d5c20e13",
-    "date": "2022-02-20T17:00:28.778Z",
-    "id": "621273ac6ec04903d5c20e1c"
-  },
-  {
     "user": "Pedro",
     "score": 3,
     "content": "Regular",
-    "porpertyID": "6212720c6ec04903d5c20e13",
-    "date": "2022-02-20T17:01:54.328Z",
-    "id": "621274026ec04903d5c20e20"
+    "porpertyID": "62129899cde25ed20f597717",
+    "date": "2022-02-20T19:39:01.315Z",
+    "id": "621298d5cde25ed20f59771b"
+  },
+  {
+    "user": "Maria",
+    "score": 5,
+    "content": "Regular",
+    "porpertyID": "62129899cde25ed20f597717",
+    "date": "2022-02-20T19:39:09.989Z",
+    "id": "621298ddcde25ed20f59771f"
+  },
+  {
+    "user": "Dairo",
+    "score": 5,
+    "content": "Buena",
+    "porpertyID": "621298fbcde25ed20f597723",
+    "date": "2022-02-20T19:40:02.756Z",
+    "id": "62129912cde25ed20f597727"
   }
 ]
 ```
 
-Post reviews
+<h3 id="get-api-review-id-refs">
+<a href="#get-api-review-id-refs">GET /api/reviews/:id</a>
+</h3>
+
+Retorna la review especifica de una propiedad.
 
 ```json
-
-  {
-    "user": "Dairo",
-    "content": "No esta Mal",
-    "score": 4,
-    "porpertyID": "6212720c6ec04903d5c20e13"
-  }
-
-  "Objeto retornado al hacer este post"
-
-  {
-    "user": "Dairo",
-    "score": 4,
-    "content": "No esta Mal",
-    "porpertyID": "6212720c6ec04903d5c20e13",
-    "date": "2022-02-20T17:00:28.778Z",
-    "id": "621273ac6ec04903d5c20e1c"
-  }
+{
+  "user": "Pedro",
+  "score": 3,
+  "content": "Regular",
+  "porpertyID": "62129899cde25ed20f597717",
+  "date": "2022-02-20T19:39:01.315Z",
+  "id": "621298d5cde25ed20f59771b"
+}
 ```
+
+Si le agrega a la ruta la "query", "/api/reviews/:id/?detailsProperty=true" esta devulve la review y la propiedad a la que se le hizo.
+
+```json
+{
+  "user": "Pedro",
+  "score": 3,
+  "content": "Regular",
+  "porpertyID": {
+    "location": {
+      "city": "Florencia",
+      "neighborhood": "La paz",
+      "address": "Cll 22B etc..."
+    },
+    "details": {
+      "area": "30",
+      "rooms": "2",
+      "baths": "2",
+      "garage": true
+    },
+    "typeProperty": "local",
+    "images": ["url", "url1"],
+    "state": "available",
+    "rentalPrice": "500",
+    "reviews": ["621298d5cde25ed20f59771b", "621298ddcde25ed20f59771f"],
+    "description": "Decripcion del inmueble",
+    "agentID": "62129850cde25ed20f597711",
+    "date": "2022-02-20T19:38:01.097Z",
+    "id": "62129899cde25ed20f597717"
+  },
+  "date": "2022-02-20T19:39:01.315Z",
+  "id": "621298d5cde25ed20f59771b"
+}
+```
+
+<h3 id="post-api-review-refs">
+<a href="#post-api-review-refs">POST /api/reviews</a>
+</h3>
+
+```json
+{
+  "user": "Dairo",
+  "content": "Buena",
+  "score": 5,
+  "porpertyID": "621298fbcde25ed20f597723"
+}
+
+"retorna el siguiente Object"
+
+{
+  "user": "Dairo",
+  "score": 5,
+  "content": "Buena",
+  "porpertyID": "621298fbcde25ed20f597723",
+  "date": "2022-02-20T19:40:02.756Z",
+  "id": "62129912cde25ed20f597727"
+}
+```
+
+<h3 id="delete-api-review-id-refs">
+<a href="#delete-api-review-id-refs">DELETE /api/reviews/:id</a>
+</h3>
+
+Borra la review a la que hace referencia el id.
+
+---
 
 <h3 id="agent-schema-refs"><a href="#agent-schema-refs">Agent Schema</a></h3>
 
