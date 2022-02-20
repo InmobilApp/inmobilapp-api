@@ -10,7 +10,11 @@ const clientSchema = new Schema({
     required: true,
     unique: true,
   },
-  adress: {
+  password: {
+    type: String,
+    required: true,
+  },
+  address: {
     type: String,
     required: true,
   },
@@ -39,6 +43,7 @@ clientSchema.set("toJSON", {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+    delete returnedObject.password;
   },
 });
 
