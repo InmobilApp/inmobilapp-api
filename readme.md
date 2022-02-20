@@ -16,6 +16,7 @@ Deploy: https://inmobil-app.herokuapp.com/
   <li><a href="#get-api-property-refs">GET /api/properties</a></li>
   <li><a href="#post-api-property-refs">POST /api/properties</a></li>
   <li><a href="#get-api-property-id-refs">GET /api/properties/:id</a></li>
+  <li><a href="#put-api-property-id-refs">PUT /api/properties/:id</a></li> 
   <li><a href="#delete-api-properties-id-refs">DELETE /api/properties/:id</a></li>
   <li><a href="#agent-schema-refs">AGENT SCHEMA</a></li>
   <li><a href="#get-api-agents-refs">GET /api/agents</a></li>
@@ -65,8 +66,8 @@ const propertySchema = new moongose.Schema({
   typeProperty: {
     type: String,
     enum: {
-      values: ['casa', 'apartamento', 'local', 'finca'],
-      message: '{VALUE} is not supported',
+      values: ["casa", "apartamento", "local", "finca"],
+      message: "{VALUE} is not supported",
     },
   },
   date: {
@@ -82,25 +83,16 @@ const propertySchema = new moongose.Schema({
   state: {
     type: String,
     enum: {
-      values: ['available', 'unavailable', 'reserved'],
-      message: '{VALUE} is not supported',
+      values: ["available", "unavailable", "reserved"],
+      message: "{VALUE} is not supported",
     },
-    default: 'available',
+    default: "available",
   },
   rentalPrice: String,
   reviews: [
     {
-      user: String,
-      content: String,
-      score: {
-        type: Number,
-        min: 0,
-        max: 5,
-      },
-      date: {
-        type: Date,
-        default: Date.now,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "Review",
     },
   ],
   description: String,
@@ -112,7 +104,7 @@ const propertySchema = new moongose.Schema({
   },
   agentID: {
     type: Schema.Types.ObjectId,
-    ref: 'Agent',
+    ref: "Agent",
   },
 });
 ```
@@ -297,10 +289,10 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 
 ```json
 {
-  "typeProperty": "casa",
+  "typeProperty": "local",
   "location": {
-    "city": "Bogota",
-    "neighborhood": "usme",
+    "city": "Florencia",
+    "neighborhood": "La paz",
     "address": "Cll 22B etc..."
   },
   "images": ["url", "url1"],
@@ -312,48 +304,48 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
     "baths": "2",
     "garage": true
   },
-  "agentID": "621001f99b52c4c41c827ca0"
+  "agentID": "621271c06ec04903d5c20e0f"
 }
 ...
 
 ...
 "Objeto retornado al hacer este post"
 {
+  "typeProperty": "local",
   "location": {
-    "city": "Bogota",
-    "neighborhood": "usme",
-    "address": "Cll 22B etc..."
+      "city": "Florencia",
+      "neighborhood": "La paz",
+      "address": "Cll 22B etc..."
   },
-  "details": {
-    "area": "30",
-    "rooms": "2",
-    "baths": "2",
-    "garage": true
-  },
-  "typeProperty": "casa",
   "images": [
       "url",
       "url1"
-    ],
+  ],
   "state": "available",
   "rentalPrice": "500",
-  "description": "Decripcion del inmueble",
-  "agentID": "620ebd5845ed0a43962601f8",
-  "date": "2022-02-18T02:31:17.152Z",
   "reviews": [],
-  "id": "620f04f5820cd052940c9b4d"
+  "description": "Decripcion del inmueble",
+  "details": {
+      "area": "30",
+      "rooms": "2",
+      "baths": "2",
+      "garage": true
+  },
+  "agentID": "621271c06ec04903d5c20e0f",
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
 }
 ```
 
 <h3 id="get-api-property-id-refs"><a href="#get-api-property-id-refs">GET /api/properties/:id</a></h3>
 
-Al hacer un get con "id" a "/api/properties/:id" retorna la propiedad que coincida con ese ID y adicionalmente trae las propiedades del agente relacionado a esta.
+Al hacer un get con "id" a "/api/properties/:id" retorna la propiedad que coincida con ese ID.
 
 ```json
 {
   "location": {
-    "city": "Bogota",
-    "neighborhood": "usme",
+    "city": "Florencia",
+    "neighborhood": "La paz",
     "address": "Cll 22B etc..."
   },
   "details": {
@@ -362,26 +354,217 @@ Al hacer un get con "id" a "/api/properties/:id" retorna la propiedad que coinci
     "baths": "2",
     "garage": true
   },
-  "typeProperty": "casa",
+  "typeProperty": "local",
   "images": ["url", "url1"],
   "state": "available",
   "rentalPrice": "500",
+  "reviews": [],
+  "description": "Decripcion del inmueble",
+  "agentID": "621271c06ec04903d5c20e0f",
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
+}
+```
+
+Al hacer un get con "id" a "/api/properties/:id/?detailsAgent=true" retorna la propiedad que coincida con ese ID y con los detalles del agente que la creo.
+
+```json
+{
+  "location": {
+    "city": "Florencia",
+    "neighborhood": "La paz",
+    "address": "Cll 22B etc..."
+  },
+  "details": {
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
+    "garage": true
+  },
+  "typeProperty": "local",
+  "images": ["url", "url1"],
+  "state": "available",
+  "rentalPrice": "500",
+  "reviews": [],
   "description": "Decripcion del inmueble",
   "agentID": {
     "permissions": {
       "crudProperty": true
     },
     "name": "Dairo",
-    "dni": "1014826698",
-    "adress": "Direccion random",
-    "phone": "56952632614",
-    "age": "27",
-    "properties": ["620ed47c289ae07764681633", "620f04f5820cd052940c9b4d"],
-    "id": "620ebd5845ed0a43962601f8"
+    "dni": "1117531587",
+    "adress": "Springfield",
+    "phone": "322 225 4787",
+    "age": "30",
+    "properties": ["6212720c6ec04903d5c20e13"],
+    "id": "621271c06ec04903d5c20e0f"
   },
-  "date": "2022-02-18T02:31:17.152Z",
-  "reviews": [],
-  "id": "620f04f5820cd052940c9b4d"
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
+}
+```
+
+Al hacer un get con "id" a "/api/properties/:id/?detailsReviews=true" retorna la propiedad que coincida con ese ID y con los detalles de las reviews hechas a esta propiedad.
+
+```json
+{
+  "location": {
+    "city": "Florencia",
+    "neighborhood": "La paz",
+    "address": "Cll 22B etc..."
+  },
+  "details": {
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
+    "garage": true
+  },
+  "typeProperty": "local",
+  "images": ["url", "url1"],
+  "state": "available",
+  "rentalPrice": "500",
+  "reviews": [
+    {
+      "user": "Dairo",
+      "score": 4,
+      "content": "No esta Mal",
+      "porpertyID": "6212720c6ec04903d5c20e13",
+      "date": "2022-02-20T17:00:28.778Z",
+      "id": "621273ac6ec04903d5c20e1c"
+    },
+    {
+      "user": "Pedro",
+      "score": 3,
+      "content": "Regular",
+      "porpertyID": "6212720c6ec04903d5c20e13",
+      "date": "2022-02-20T17:01:54.328Z",
+      "id": "621274026ec04903d5c20e20"
+    }
+  ],
+  "description": "Decripcion del inmueble",
+  "agentID": "621271c06ec04903d5c20e0f",
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
+}
+```
+
+Al hacer un get con "id" a "/api/properties/:id/?detailsReviews=true&detailsAgent=true" retorna la propiedad que coincida con ese ID y con los detalles de las reviews hechas a esta propiedad y ademas los detalles del agente.
+
+```json
+{
+  "location": {
+    "city": "Florencia",
+    "neighborhood": "La paz",
+    "address": "Cll 22B etc..."
+  },
+  "details": {
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
+    "garage": true
+  },
+  "typeProperty": "local",
+  "images": ["url", "url1"],
+  "state": "available",
+  "rentalPrice": "500",
+  "reviews": [
+    {
+      "user": "Dairo",
+      "score": 4,
+      "content": "No esta Mal",
+      "porpertyID": "6212720c6ec04903d5c20e13",
+      "date": "2022-02-20T17:00:28.778Z",
+      "id": "621273ac6ec04903d5c20e1c"
+    },
+    {
+      "user": "Pedro",
+      "score": 3,
+      "content": "Regular",
+      "porpertyID": "6212720c6ec04903d5c20e13",
+      "date": "2022-02-20T17:01:54.328Z",
+      "id": "621274026ec04903d5c20e20"
+    }
+  ],
+  "description": "Decripcion del inmueble",
+  "agentID": {
+    "permissions": {
+      "crudProperty": true
+    },
+    "name": "Dairo",
+    "dni": "1117531587",
+    "adress": "Springfield",
+    "phone": "322 225 4787",
+    "age": "30",
+    "properties": ["6212720c6ec04903d5c20e13"],
+    "id": "621271c06ec04903d5c20e0f"
+  },
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
+}
+```
+
+<h3 id="put-api-property-id-refs"><a href="#put-api-property-id-refs">PUT /api/properties/:id</a></h3>
+
+Para hacer un put deverian hacer primero un get al la propiedad que desean modificar con "/api/properties/:id" sin ninguna "query", enviar el objeto completo con las propiedades que cambiaron.
+
+```json
+{
+  "location": {
+    "city": "Florencia",
+    "neighborhood": "La paz",
+    "address": "Cll 22B etc..."
+  },
+  "details": {
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
+    "garage": true
+  },
+  "typeProperty": "local",
+  "images": ["url", "url1"],
+  "state": "available",
+  "rentalPrice": "500",
+  "reviews": ["621273ac6ec04903d5c20e1c", "621274026ec04903d5c20e20"],
+  "description": "Decripcion del inmueble",
+  "agentID": "621271c06ec04903d5c20e0f",
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
+}
+```
+
+Por ejemplo desean cambiar el "rentalPrice", el axios le devolveria ya un objeto de "javascript".
+
+```javascript
+const propertyReturned = {
+  ...property,
+  rentalPrice: "700",
+};
+```
+
+Esto retornaria el siguiente Objeto.
+
+```json
+{
+  "location": {
+    "city": "Florencia",
+    "neighborhood": "La paz",
+    "address": "Cll 22B etc..."
+  },
+  "details": {
+    "area": "30",
+    "rooms": "2",
+    "baths": "2",
+    "garage": true
+  },
+  "typeProperty": "local",
+  "images": ["url", "url1"],
+  "state": "available",
+  "rentalPrice": "700",
+  "reviews": ["621273ac6ec04903d5c20e1c", "621274026ec04903d5c20e20"],
+  "description": "Decripcion del inmueble",
+  "agentID": "621271c06ec04903d5c20e0f",
+  "date": "2022-02-20T16:53:32.667Z",
+  "id": "6212720c6ec04903d5c20e13"
 }
 ```
 
@@ -390,6 +573,52 @@ Al hacer un get con "id" a "/api/properties/:id" retorna la propiedad que coinci
 Borra la propiedad con el id pasado por parametro de la base de datos y quita la referencia a esta en el agent.
 
 ---
+
+get reviews
+
+```json
+[
+  {
+    "user": "Dairo",
+    "score": 4,
+    "content": "No esta Mal",
+    "porpertyID": "6212720c6ec04903d5c20e13",
+    "date": "2022-02-20T17:00:28.778Z",
+    "id": "621273ac6ec04903d5c20e1c"
+  },
+  {
+    "user": "Pedro",
+    "score": 3,
+    "content": "Regular",
+    "porpertyID": "6212720c6ec04903d5c20e13",
+    "date": "2022-02-20T17:01:54.328Z",
+    "id": "621274026ec04903d5c20e20"
+  }
+]
+```
+
+Post reviews
+
+```json
+
+  {
+    "user": "Dairo",
+    "content": "No esta Mal",
+    "score": 4,
+    "porpertyID": "6212720c6ec04903d5c20e13"
+  }
+
+  "Objeto retornado al hacer este post"
+
+  {
+    "user": "Dairo",
+    "score": 4,
+    "content": "No esta Mal",
+    "porpertyID": "6212720c6ec04903d5c20e13",
+    "date": "2022-02-20T17:00:28.778Z",
+    "id": "621273ac6ec04903d5c20e1c"
+  }
+```
 
 <h3 id="agent-schema-refs"><a href="#agent-schema-refs">Agent Schema</a></h3>
 

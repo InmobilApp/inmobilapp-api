@@ -30,17 +30,8 @@ const propertySchema = new moongose.Schema({
   rentalPrice: String,
   reviews: [
     {
-      user: String,
-      content: String,
-      score: {
-        type: Number,
-        min: 0,
-        max: 5,
-      },
-      date: {
-        type: Date,
-        default: Date.now,
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'Review',
     },
   ],
   description: String,

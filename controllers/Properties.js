@@ -5,7 +5,12 @@ const Agent = require('../models/agent');
 propertyRouter.get('/', async (req, res) => {
   const properties = await Property.find({});
 
-  res.json(properties);
+  const { detailsReviews } = req.query;
+  if (detailsReviews === 'true') {
+    res.json(await Property.find({}).populate('reviews'));
+  } else {
+    res.json(properties);
+  }
 });
 
 propertyRouter.post('/', async (req, res) => {
@@ -23,11 +28,24 @@ propertyRouter.post('/', async (req, res) => {
 
 propertyRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
+  const { detailsAgent, detailsReviews } = req.query;
+  const property = await Property.findById(id);
 
-  const property = await Property.findById(id).populate('agentID');
-
-  if (property) return res.json(property);
-  return res.status(404).end();
+  if (property) {
+    if (detailsAgent === 'true' && detailsReviews === 'true') {
+      res.json(
+        await Property.findById(id).populate('agentID').populate('reviews'),
+      );
+    } else if (detailsAgent === 'true') {
+      res.json(await Property.findById(id).populate('agentID'));
+    } else if (detailsReviews === 'true') {
+      res.json(await Property.findById(id).populate('reviews'));
+    } else {
+      res.json(property);
+    }
+  } else {
+    res.status(404).end();
+  }
 });
 
 propertyRouter.put('/:id', async (req, res) => {
