@@ -29,6 +29,7 @@ Deploy: https://inmobil-app.herokuapp.com/
   <li><a href="#agent-schema-refs">AGENT SCHEMA</a></li>
   <li><a href="#get-api-agents-refs">GET /api/agents</a></li>
   <li><a href="#post-api-agents-refs">POST /api/agents</a></li>
+  <li><a href="#put-api-agent-id-refs">PUT /api/agents/:id</a></li>
   <li><a href="#delete-api-agents-id-refs">DELETE /api/agents/:id</a></li>
   <br>
   <li><a href="#client-schema-refs">CLIENT SCHEMA</a></li>
@@ -807,7 +808,7 @@ const agentSchema = new Schema({
     required: true,
     unique: true,
   },
-  adress: {
+  address: {
     type: String,
     required: true,
   },
@@ -862,7 +863,7 @@ Retorna un arreglo con todas los agentes guardados en la base de datos y su rela
   },
   "name": "David",
   "dni": "1012437698",
-  "adress": "Direccion random en bucaramanga",
+  "address": "Direccion random en bucaramanga",
   "phone": "98565621",
   "age": "22",
   "properties": [
@@ -883,7 +884,7 @@ Retorna un JSON con la informacion completa de un agente guardado en la base de 
   },
   "name": "David",
   "dni": "1012437698",
-  "adress": "Direccion random en bucaramanga",
+  "address": "Direccion random en bucaramanga",
   "phone": "98565621",
   "age": "22",
   "properties": [
@@ -923,10 +924,10 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 
 ```javascript
 {
-  adminID: "620e806162c266edbeaca6f7",
+  adminID: "620e806162c266edbeaca6f7",  // ----> Se debe pasar el id del admin (RELACION)
   dni: "1075982698",
   name: "Gabriel",
-  adress: "Springfield",
+  address: "Springfield",
   phone: "7591546",
   age: "30",
   permissions: {
@@ -939,7 +940,7 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 {
     "name": "Gabriel",
     "dni": "1075982698",
-    "adress": "Springfield",
+    "address": "Springfield",
     "phone": "7591546",
     "age": "30",
     "properties": [],
@@ -947,6 +948,17 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
         "crudProperty": true
     },
     "id": "620ed23cd2696158e8b89619"
+}
+```
+
+### PUT "api/agents/620ed23cd2696158e8b89619"
+
+<h3 id="put-api-agent-id-refs"><a href="#put-api-agent-id-refs">PUT /api/agents/:id</a></h3>
+Por medio de "body" recibe un objeto con los datos que se quieren actualizar agente
+
+```json
+{
+  "name": "David" // Aca solo quiero actualizar el nombre del agente
 }
 ```
 
