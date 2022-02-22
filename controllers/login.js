@@ -24,6 +24,12 @@ loginRouter.post("/", async (req, res) => {
   res.send({
     name: client.name,
     dni: client.dni,
+    address: client.address,
+    phone: client.phone,
+    age: client.age,
+    payDay: client.payDay,
+    paymentIssued: client.paymentIssued,
+    propertyID: client.propertyID,
     token,
   });
 });

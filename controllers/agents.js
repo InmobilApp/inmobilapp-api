@@ -9,8 +9,16 @@ agentsRouter.get("/", async (req, res) => {
 
 agentsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
+  const { detailsProperties } = req.query;
 
-  const agent = await Agent.findById(id).populate("properties");
+  if (detailsProperties === "true") {
+    const completAgentInfo = await Agent.findById(id).populate("properties");
+    completAgentInfo
+      ? res.json(completAgentInfo).end()
+      : res.status(404).json({ test: "The agent does not exist" }).end();
+  }
+
+  const agent = await Agent.findById(id);
   agent
     ? res.json(agent).end()
     : res.status(404).json({ test: "The agent does not exist" }).end();

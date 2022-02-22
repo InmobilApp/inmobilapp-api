@@ -52,9 +52,32 @@ clientsRouter.put("/:id", async (req, res) => {
   let decodedToken = {};
   try {
     decodedToken = jwt.verify(token, process.env.SECRET);
+    if (update.dni)
+      return res
+        .status(403)
+        .json({ text: "You can not change your dni number" });
+
     if (update.propertyID) {
       const property = await Property.findById(update.propertyID);
       update.propertyID = property._id;
+    }
+
+    if (update.password && update.newPassword) {
+      const client = await Client.findById(id);
+      const passwordCorrect = await bcrypt.compare(
+        update.password,
+        client.password
+      );
+
+      if (!(client && passwordCorrect)) {
+        return res
+          .status(401)
+          .json({ text: "Invalid client or password" })
+          .end();
+      }
+
+      const newPasswordHash = await bcrypt.hash(update.newPassword, 10);
+      update.password = newPasswordHash;
     }
 
     const clientUpdated = await Client.findByIdAndUpdate(id, update, {
@@ -67,7 +90,6 @@ clientsRouter.put("/:id", async (req, res) => {
   } catch (error) {
     res.status(401).json(error);
   }
-  // Fin valivación___________________________________________________________________
 });
 
 clientsRouter.delete("/:id", async (req, res) => {
