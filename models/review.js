@@ -13,7 +13,7 @@ const reviewSchema = new moongose.Schema({
     type: String,
     required: true,
   },
-  porpertyID: {
+  propertyID: {
     type: moongose.Schema.Types.ObjectId,
     ref: 'Property',
   },
