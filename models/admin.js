@@ -14,8 +14,14 @@ const adminSchema = new moongose.Schema({
     max: 120,
   },
   permissions: {
-    crudAgent: Boolean,
-    crudAdmin: Boolean,
+    crudAgent: {
+      type: Boolean,
+      default: true,
+    },
+    crudAdmin: {
+      type: Boolean,
+      default: true,
+    },
   },
   agentsID: [
     {
@@ -23,6 +29,10 @@ const adminSchema = new moongose.Schema({
       ref: 'Agent',
     },
   ],
+  roll: {
+    type: String,
+    default: 'ADMIN',
+  },
 });
 
 adminSchema.set('toJSON', {
