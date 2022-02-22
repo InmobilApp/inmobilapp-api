@@ -1032,6 +1032,14 @@ Cuando ocurre un error al hacer un PUT o POST con el Schema va a retornar un mes
 response.status(400).json({ error: error.message });
 ```
 
+Cuando no se envia el token, para hacer un update o delete de un cliente.
+```json
+{
+    "name": "JsonWebTokenError",
+    "message": "jwt must be provided"    <-------------
+}
+```
+
 # Rutas "api/clients"
 
 ### GET "api/clients"
@@ -1145,11 +1153,11 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 
 <h3 id="update-api-clients-id-refs"><a href="#update-api-clients-id-refs">UPDATE /api/clients/:id</a></h3>
 
-Por medio de "body" recibe un objeto con los datos que se quieren actualizar del cliente
+Por medio de "body" recibe un objeto con los datos que se quieren actualizar del cliente. Sin el token, no se puede actualizar la info del cliente.
 
 ```JSON
 {
-   "propertyID": "620e811562c266edbeaca6fd",  --------> Importante enviar la ID de la propiedad para hacer la relacion!
+   "propertyID": "620e811562c266edbeaca6fd",  --------> Si quiero hacer una relacion (Si quiero asignarle una propiedad al cliente). No es obligatorio enviarla
   "address": "Direccion random en Bogota",
   "phone": "3194785677",
   "age": "30",
@@ -1175,4 +1183,4 @@ Por medio de "body" recibe un objeto con los datos que se quieren actualizar del
 
 <h3 id="delete-api-clients-id-refs"><a href="#delete-api-clients-id-refs">DELETE /api/clients/:id</a></h3>
 
-Borra el cliente con el id pasado por parametros.
+Borra el cliente con el id pasado por parametros. Sin el token, no se puede eliminar un cliente.
