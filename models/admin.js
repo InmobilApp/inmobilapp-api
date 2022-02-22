@@ -29,6 +29,10 @@ const adminSchema = new moongose.Schema({
       ref: 'Agent',
     },
   ],
+  roll: {
+    type: String,
+    default: 'ADMIN',
+  },
 });
 
 adminSchema.set('toJSON', {
