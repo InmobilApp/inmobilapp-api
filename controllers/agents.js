@@ -17,7 +17,8 @@ agentsRouter.get("/:id", async (req, res) => {
 });
 
 agentsRouter.put("/:id", async (req, res) => {
-  const { id, ...update } = req.body;
+  const { id } = req.params;
+  const { ...update } = req.body;
 
   const agentUpdated = await Agent.findByIdAndUpdate(id, update, {
     new: true,
@@ -35,14 +36,19 @@ agentsRouter.delete("/:id", async (req, res) => {
 });
 
 agentsRouter.post("/", async (req, res) => {
-  const { adminID, name, dni, adress, phone, age, permissions } = req.body;
+  const { adminID, name, dni, address, phone, age, permissions } = req.body;
 
   const admin = await Admin.findById(adminID);
+
+  if (!admin)
+    return res.status(400).json({
+      text: `Please verify the adminID. The adminID(${adminID}), not belongs to an admin.`,
+    });
 
   const newAgent = new Agent({
     name,
     dni,
-    adress,
+    address,
     phone,
     age,
     adminID: admin._id,
