@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const clientsRouter = require("express").Router();
 const Client = require("../models/client");
 const Property = require("../models/property");
+const jwt = require("jsonwebtoken");
 
 clientsRouter.post("/", async (req, res) => {
   const { name, dni, password, address, phone, age } = req.body;
@@ -38,27 +39,58 @@ clientsRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
   let { ...update } = req.body;
 
-  if (!update.propertyID)
-    res.status(400).json({ text: "Please send the propertyID" }).end();
+  // Validación para actualizar datos del cliente_____________________________________
+  const authorization = req.get("authorization");
+  let token = null;
 
-  const property = await Property.findById(update.propertyID);
+  if (authorization && authorization.toLocaleLowerCase().startsWith("bearer")) {
+    // authorization = 'Bearer 46as4dq8w5e4q5w4x4'
+    // token = authorization.split(' ')[1] -> Otra forma de sacar el token
+    token = authorization.substring(7);
+  }
 
-  update.propertyID = property._id;
+  let decodedToken = {};
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET);
+    if (update.propertyID) {
+      const property = await Property.findById(update.propertyID);
+      update.propertyID = property._id;
+    }
 
-  const clientUpdated = await Client.findByIdAndUpdate(id, update, {
-    new: true,
-  });
+    const clientUpdated = await Client.findByIdAndUpdate(id, update, {
+      new: true,
+    });
 
-  clientUpdated
-    ? res.json(clientUpdated).end()
-    : res.status(404).json({ text: "The client does not exist" });
+    clientUpdated
+      ? res.json(clientUpdated).end()
+      : res.status(404).json({ text: "The client does not exist" });
+  } catch (error) {
+    res.status(401).json(error);
+  }
+  // Fin valivación___________________________________________________________________
 });
 
 clientsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  await Client.findByIdAndDelete(id);
-  res.json({ msg: "Agent deleted" }).end();
+  const authorization = req.get("authorization");
+  let token = null;
+
+  if (authorization && authorization.toLocaleLowerCase().startsWith("bearer")) {
+    // authorization = 'Bearer 46as4dq8w5e4q5w4x4'
+    // token = authorization.split(' ')[1] -> Otra forma de sacar el token
+    token = authorization.substring(7);
+  }
+
+  let decodedToken = {};
+
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET);
+    await Client.findByIdAndDelete(id);
+    res.json({ msg: "Client deleted" }).end();
+  } catch (error) {
+    res.status(401).json(error);
+  }
 });
 
 module.exports = clientsRouter;
