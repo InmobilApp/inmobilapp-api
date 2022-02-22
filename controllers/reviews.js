@@ -3,7 +3,12 @@ const Review = require('../models/review');
 const Property = require('../models/property');
 
 reviewRouter.get('/', async (req, res) => {
-  res.json(await Review.find({}));
+  const { detailsProperty } = req.query;
+  if (detailsProperty === 'true') {
+    res.json(await Review.find({}).populate('porpertyID'));
+  } else {
+    res.json(await Review.find({}));
+  }
 });
 
 reviewRouter.post('/', async (req, res) => {
