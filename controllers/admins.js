@@ -29,9 +29,6 @@ adminRouter.get('/:id', async (req, res) => {
   } else {
     res.status(404).end();
   }
-
-  if (admin) return res.json(admin);
-  return res.status(404).end();
 });
 
 adminRouter.put('/:id', async (req, res) => {
