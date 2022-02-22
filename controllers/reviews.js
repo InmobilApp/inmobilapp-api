@@ -5,7 +5,7 @@ const Property = require('../models/property');
 reviewRouter.get('/', async (req, res) => {
   const { detailsProperty } = req.query;
   if (detailsProperty === 'true') {
-    res.json(await Review.find({}).populate('porpertyID'));
+    res.json(await Review.find({}).populate('propertyID'));
   } else {
     res.json(await Review.find({}));
   }
@@ -35,7 +35,7 @@ reviewRouter.get('/:id', async (req, res) => {
 
   if (review) {
     if (detailsProperty === 'true') {
-      res.json(await Review.findById(id).populate('porpertyID'));
+      res.json(await Review.findById(id).populate('propertyID'));
     } else {
       res.json(review);
     }
