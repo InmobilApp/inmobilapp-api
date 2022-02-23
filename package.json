@@ -4,7 +4,7 @@
   "description": "https://github.com/InmobilApp",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "build:ui": "rm -rf build && cd ../inmobilapp-client && npm run build --prod && cp -r build ../inmobilapp-api",
     "deploy": "git push heroku master",

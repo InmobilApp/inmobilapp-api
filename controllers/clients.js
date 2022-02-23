@@ -88,7 +88,7 @@ clientsRouter.put("/:id", async (req, res) => {
       ? res.json(clientUpdated).end()
       : res.status(404).json({ text: "The client does not exist" });
   } catch (error) {
-    res.status(401).json(error);
+    res.status(400).json(error.message);
   }
 });
 
