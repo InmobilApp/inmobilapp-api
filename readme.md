@@ -211,8 +211,8 @@ const propertySchema = new moongose.Schema({
   },
   rentalPrice: {
     type: Number,
-    min: 10,
-    max: 5000000,
+    min: 100,
+    max: 2000,
   },
   reviews: [
     {
@@ -227,8 +227,8 @@ const propertySchema = new moongose.Schema({
   details: {
     area: {
       type: Number,
-      min: 10,
-      max: 1000,
+      min: 25,
+      max: 300,
     },
     rooms: {
       type: Number,
@@ -238,7 +238,7 @@ const propertySchema = new moongose.Schema({
     baths: {
       type: Number,
       min: 1,
-      max: 20,
+      max: 10,
     },
     garage: Boolean,
   },
@@ -422,12 +422,12 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
   "images": [
     "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
   ],
-  "rentalPrice": 500, //-> min: 10, max: 5000000
+  "rentalPrice": 500, //-> min: 100, max: 2000
   "description": "Esta es una casa ubicada en Bogota", //--> min 10 characters
   "details": {
-    "area": 10, //--> min: 10, max: 1000
+    "area": 10, //--> min: 25, max: 300
     "rooms": 1, //--> min: 1, max: 20
-    "baths": 1, //--> min: 1, max: 20
+    "baths": 1, //--> min: 1, max: 10
     "garage": true
   },
   "agentID": "62140409a933fe675f1d0db5"

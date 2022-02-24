@@ -29,8 +29,8 @@ const propertySchema = new moongose.Schema({
   },
   rentalPrice: {
     type: Number,
-    min: 10,
-    max: 5000000,
+    min: 100,
+    max: 2000,
   },
   reviews: [
     {
@@ -45,8 +45,8 @@ const propertySchema = new moongose.Schema({
   details: {
     area: {
       type: Number,
-      min: 10,
-      max: 1000,
+      min: 25,
+      max: 300,
     },
     rooms: {
       type: Number,
@@ -56,7 +56,7 @@ const propertySchema = new moongose.Schema({
     baths: {
       type: Number,
       min: 1,
-      max: 20,
+      max: 10,
     },
     garage: Boolean,
   },
