@@ -50,46 +50,38 @@ clientsRouter.put("/:id", async (req, res) => {
   }
 
   let decodedToken = {};
-  try {
-    decodedToken = jwt.verify(token, process.env.SECRET);
-    if (update.dni)
-      return res
-        .status(403)
-        .json({ text: "You can not change your dni number" });
 
-    if (update.propertyID) {
-      const property = await Property.findById(update.propertyID);
-      update.propertyID = property._id;
-    }
+  decodedToken = jwt.verify(token, process.env.SECRET);
+  if (update.dni)
+    return res.status(403).json({ text: "You can not change your dni number" });
 
-    if (update.password && update.newPassword) {
-      const client = await Client.findById(id);
-      const passwordCorrect = await bcrypt.compare(
-        update.password,
-        client.password
-      );
-
-      if (!(client && passwordCorrect)) {
-        return res
-          .status(401)
-          .json({ text: "Invalid client or password" })
-          .end();
-      }
-
-      const newPasswordHash = await bcrypt.hash(update.newPassword, 10);
-      update.password = newPasswordHash;
-    }
-
-    const clientUpdated = await Client.findByIdAndUpdate(id, update, {
-      new: true,
-    });
-
-    clientUpdated
-      ? res.json(clientUpdated).end()
-      : res.status(404).json({ text: "The client does not exist" });
-  } catch (error) {
-    res.status(400).json(error.message);
+  if (update.propertyID) {
+    const property = await Property.findById(update.propertyID);
+    update.propertyID = property._id;
   }
+
+  if (update.password && update.newPassword) {
+    const client = await Client.findById(id);
+    const passwordCorrect = await bcrypt.compare(
+      update.password,
+      client.password
+    );
+
+    if (!(client && passwordCorrect)) {
+      return res.status(401).json({ text: "Invalid client or password" }).end();
+    }
+
+    const newPasswordHash = await bcrypt.hash(update.newPassword, 10);
+    update.password = newPasswordHash;
+  }
+
+  const clientUpdated = await Client.findByIdAndUpdate(id, update, {
+    new: true,
+  });
+
+  clientUpdated
+    ? res.json(clientUpdated).end()
+    : res.status(404).json({ text: "The client does not exist" });
 });
 
 clientsRouter.delete("/:id", async (req, res) => {
@@ -106,13 +98,9 @@ clientsRouter.delete("/:id", async (req, res) => {
 
   let decodedToken = {};
 
-  try {
-    decodedToken = jwt.verify(token, process.env.SECRET);
-    await Client.findByIdAndDelete(id);
-    res.json({ msg: "Client deleted" }).end();
-  } catch (error) {
-    res.status(401).json(error);
-  }
+  decodedToken = jwt.verify(token, process.env.SECRET);
+  await Client.findByIdAndDelete(id);
+  res.json({ msg: "Client deleted" }).end();
 });
 
 module.exports = clientsRouter;
