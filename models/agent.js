@@ -10,6 +10,14 @@ const agentSchema = new Schema({
     required: true,
     unique: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    default: "Agent",
+  },
   address: {
     type: String,
     required: true,
@@ -36,6 +44,7 @@ agentSchema.set("toJSON", {
     returnedObject.id = returnedObject._id;
     delete returnedObject._id;
     delete returnedObject.__v;
+    delete returnedObject.password;
   },
 });
 

@@ -1,6 +1,7 @@
 const agentsRouter = require("express").Router();
 const Agent = require("../models/agent");
 const Admin = require("../models/admin");
+const bcrypt = require("bcrypt");
 
 agentsRouter.get("/", async (req, res) => {
   const agents = await Agent.find({});
@@ -44,7 +45,10 @@ agentsRouter.delete("/:id", async (req, res) => {
 });
 
 agentsRouter.post("/", async (req, res) => {
-  const { adminID, name, dni, address, phone, age, permissions } = req.body;
+  const { adminID, name, dni, password, address, phone, age, permissions } =
+    req.body;
+
+  const passwordHash = await bcrypt.hash(password, 10);
 
   const admin = await Admin.findById(adminID);
 
@@ -56,6 +60,7 @@ agentsRouter.post("/", async (req, res) => {
   const newAgent = new Agent({
     name,
     dni,
+    password: passwordHash,
     address,
     phone,
     age,
