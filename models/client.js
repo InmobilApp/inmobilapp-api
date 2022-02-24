@@ -10,6 +10,10 @@ const clientSchema = new Schema({
     required: true,
     unique: true,
   },
+  role: {
+    type: String,
+    default: "Client",
+  },
   password: {
     type: String,
     required: true,
