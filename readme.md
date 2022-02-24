@@ -206,18 +206,37 @@ const propertySchema = new moongose.Schema({
     },
     default: "available",
   },
-  rentalPrice: String,
+  rentalPrice: {
+    type: Number,
+    min: 10,
+    max: 5000000,
+  },
   reviews: [
     {
       type: Schema.Types.ObjectId,
       ref: "Review",
     },
   ],
-  description: String,
+  description: {
+    type: String,
+    minlength: 10,
+  },
   details: {
-    area: String,
-    rooms: String,
-    baths: String,
+    area: {
+      type: Number,
+      min: 10,
+      max: 1000,
+    },
+    rooms: {
+      type: Number,
+      min: 1,
+      max: 20,
+    },
+    baths: {
+      type: Number,
+      min: 1,
+      max: 20,
+    },
     garage: Boolean,
   },
   agentID: {
@@ -235,47 +254,75 @@ Retorna un arreglo con todas las propiedades guardadas en la base de datos.
 [
   {
     "location": {
-      "city": "Florencia",
-      "neighborhood": "La paz",
-      "address": "Cll 22B etc..."
-    },
-    "details": {
-      "area": "30",
-      "rooms": "2",
-      "baths": "2",
-      "garage": true
-    },
-    "typeProperty": "local",
-    "images": ["url", "url1"],
-    "state": "available",
-    "rentalPrice": "500",
-    "reviews": ["621298d5cde25ed20f59771b", "621298ddcde25ed20f59771f"],
-    "description": "Decripcion del inmueble",
-    "agentID": "62129850cde25ed20f597711",
-    "date": "2022-02-20T19:38:01.097Z",
-    "id": "62129899cde25ed20f597717"
-  },
-  {
-    "location": {
       "city": "Bogota",
-      "neighborhood": "Suba",
-      "address": "Cll 22B etc..."
+      "neighborhood": "bosa",
+      "address": "Cra 2B"
     },
     "details": {
-      "area": "30",
-      "rooms": "2",
-      "baths": "2",
+      "area": 10,
+      "rooms": 1,
+      "baths": 1,
       "garage": true
     },
     "typeProperty": "casa",
-    "images": ["url", "url1"],
+    "images": [
+      "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
+    ],
     "state": "available",
-    "rentalPrice": "500",
-    "reviews": ["62129912cde25ed20f597727"],
-    "description": "Decripcion del inmueble",
-    "agentID": "62129850cde25ed20f597711",
-    "date": "2022-02-20T19:39:39.178Z",
-    "id": "621298fbcde25ed20f597723"
+    "rentalPrice": 500,
+    "reviews": [],
+    "description": "Esta es una casa ubicada en Bogota",
+    "agentID": "62140409a933fe675f1d0db5",
+    "date": "2022-02-24T01:19:07.461Z",
+    "id": "6216dd0b1ad5cc90813e26d5"
+  },
+  {
+    "location": {
+      "city": "Florencia",
+      "neighborhood": "La paz",
+      "address": "Calle 22B"
+    },
+    "details": {
+      "area": 500,
+      "rooms": 15,
+      "baths": 12,
+      "garage": true
+    },
+    "typeProperty": "finca",
+    "images": [
+      "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
+    ],
+    "state": "available",
+    "rentalPrice": 2000,
+    "reviews": [],
+    "description": "Esta es una casa ubicada en Bogota",
+    "agentID": "62140409a933fe675f1d0db5",
+    "date": "2022-02-24T01:24:31.824Z",
+    "id": "6216de4f1ad5cc90813e26d9"
+  },
+  {
+    "location": {
+      "city": "Buenos aires",
+      "neighborhood": "no se",
+      "address": "Calle 22B"
+    },
+    "details": {
+      "area": 100,
+      "rooms": 5,
+      "baths": 3,
+      "garage": false
+    },
+    "typeProperty": "local",
+    "images": [
+      "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
+    ],
+    "state": "available",
+    "rentalPrice": 5000,
+    "reviews": [],
+    "description": "Esta es una casa ubicada en Bogota",
+    "agentID": "62140409a933fe675f1d0db5",
+    "date": "2022-02-24T01:25:19.697Z",
+    "id": "6216de7f1ad5cc90813e26dd"
   }
 ]
 ```
@@ -363,51 +410,53 @@ Por medio de "body" recibe un objeto con las propiedades requeridas para crear u
 
 ```json
 {
-  "typeProperty": "local",
+  "typeProperty": "casa", //--> 'casa', 'apartamento', 'local', 'finca'
   "location": {
-    "city": "Florencia",
-    "neighborhood": "La paz",
-    "address": "Cll 22B etc..."
-  },
-  "images": ["url", "url1"],
-  "rentalPrice": "500",
-  "description": "Decripcion del inmueble",
-  "details": {
-    "area": "30",
-    "rooms": "2",
-    "baths": "2",
-    "garage": true
-  },
-  "agentID": "621271c06ec04903d5c20e0f"
-}
-...
-
-...
-"Objeto retornado al hacer este post"
-{
-  "typeProperty": "local",
-  "location": {
-      "city": "Florencia",
-      "neighborhood": "La paz",
-      "address": "Cll 22B etc..."
+    "city": "Bogota",
+    "neighborhood": "bosa",
+    "address": "Cra 2B"
   },
   "images": [
-      "url",
-      "url1"
+    "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
+  ],
+  "rentalPrice": 500, //-> min: 10, max: 5000000
+  "description": "Esta es una casa ubicada en Bogota", //--> min 10 characters
+  "details": {
+    "area": 10, //--> min: 10, max: 1000
+    "rooms": 1, //--> min: 1, max: 20
+    "baths": 1, //--> min: 1, max: 20
+    "garage": true
+  },
+  "agentID": "62140409a933fe675f1d0db5"
+}
+```
+
+Retorna
+
+```json
+{
+  "typeProperty": "casa",
+  "location": {
+    "city": "Bogota",
+    "neighborhood": "bosa",
+    "address": "Cra 2B"
+  },
+  "images": [
+    "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
   ],
   "state": "available",
-  "rentalPrice": "500",
+  "rentalPrice": 500,
   "reviews": [],
-  "description": "Decripcion del inmueble",
+  "description": "Esta es una casa ubicada en Bogota",
   "details": {
-      "area": "30",
-      "rooms": "2",
-      "baths": "2",
-      "garage": true
+    "area": 10,
+    "rooms": 1,
+    "baths": 1,
+    "garage": true
   },
-  "agentID": "621271c06ec04903d5c20e0f",
-  "date": "2022-02-20T16:53:32.667Z",
-  "id": "6212720c6ec04903d5c20e13"
+  "agentID": "62140409a933fe675f1d0db5",
+  "date": "2022-02-24T01:19:07.461Z",
+  "id": "6216dd0b1ad5cc90813e26d5"
 }
 ```
 
@@ -1033,6 +1082,7 @@ response.status(400).json({ error: error.message });
 ```
 
 Cuando no se envia el token, para hacer un update o delete de un cliente.
+
 ```json
 {
     "name": "JsonWebTokenError",
