@@ -1,4 +1,5 @@
 const adminRouter = require('express').Router();
+const bcrypt = require('bcrypt');
 const Admin = require('../models/admin');
 
 adminRouter.get('/', async (req, res) => {
@@ -8,7 +9,13 @@ adminRouter.get('/', async (req, res) => {
 });
 
 adminRouter.post('/', async (req, res) => {
-  const admin = new Admin(req.body);
+  const { password, ...newAdmin } = req.body;
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  const admin = new Admin({
+    ...newAdmin,
+    password: hashPassword,
+  });
 
   const savedAdmin = await admin.save();
   res.status(201).json(savedAdmin);
