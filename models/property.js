@@ -27,18 +27,37 @@ const propertySchema = new moongose.Schema({
     },
     default: 'available',
   },
-  rentalPrice: String,
+  rentalPrice: {
+    type: Number,
+    min: 10,
+    max: 5000000,
+  },
   reviews: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Review',
     },
   ],
-  description: String,
+  description: {
+    type: String,
+    minlength: 10,
+  },
   details: {
-    area: String,
-    rooms: String,
-    baths: String,
+    area: {
+      type: Number,
+      min: 10,
+      max: 1000,
+    },
+    rooms: {
+      type: Number,
+      min: 1,
+      max: 20,
+    },
+    baths: {
+      type: Number,
+      min: 1,
+      max: 20,
+    },
     garage: Boolean,
   },
   agentID: {
