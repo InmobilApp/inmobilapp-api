@@ -2,9 +2,13 @@ const moongose = require('mongoose');
 
 const adminSchema = new moongose.Schema({
   name: String,
-  DNI: {
+  dni: {
     type: String,
     unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
   },
   address: String,
   phone: String,
@@ -29,7 +33,7 @@ const adminSchema = new moongose.Schema({
       ref: 'Agent',
     },
   ],
-  roll: {
+  role: {
     type: String,
     default: 'ADMIN',
   },
@@ -40,6 +44,7 @@ adminSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+    delete returnedObject.password;
   },
 });
 

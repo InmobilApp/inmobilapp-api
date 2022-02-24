@@ -120,32 +120,35 @@ Cuando se hace un POST de un Admin no, se nesecita especificar el Agent que tien
 
 ```json
 {
-  "name": "David",
-  "DNI": "1117598847",
-  "address": "...",
+  "name": "Dairo",
+  "dni": "1117531879",
+  "address": "Calle 22B",
   "phone": "322 548 7898",
+  "password": "password",
   "age": 50,
   "permissions": {
     "crudAgent": true,
     "crudAdmin": true
   }
 }
-...
+```
 
-...
-"Objeto retornado al hacer el post"
+Retorna
+
+```json
 {
-  "name": "David",
-  "DNI": "1117598847",
-  "address": "...",
+  "name": "Dairo",
+  "dni": "1117531879",
+  "address": "Calle 22B",
   "phone": "322 548 7898",
   "age": 50,
   "permissions": {
-      "crudAgent": true,
-      "crudAdmin": true
+    "crudAgent": true,
+    "crudAdmin": true
   },
   "agentsID": [],
-  "id": "620fb78e52948f937ec1c313"
+  "role": "ADMIN",
+  "id": "6217bf128b96709a231f864a"
 }
 ```
 
