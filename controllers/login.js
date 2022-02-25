@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const loginRouter = require("express").Router();
 const Client = require("../models/client");
 const Agent = require("../models/agent");
+const Admin = require("../models/admin");
 
 loginRouter.post("/", async (req, res) => {
   const { dni, password } = req.body;
@@ -62,6 +63,36 @@ loginRouter.post("/", async (req, res) => {
       age: agent.age,
       properties: agent.properties,
       adminID: agent.adminID,
+      token,
+    });
+  }
+
+  const admin = await Admin.findOne({ dni });
+
+  if (admin) {
+    const passwordCorrect = await bcrypt.compare(password, admin.password);
+
+    if (!passwordCorrect)
+      return res.status(401).json({ text: "Invalid dni or password" }).end();
+
+    const adminForToken = {
+      id: admin._id,
+      dni: admin.dni,
+    };
+
+    const token = jwt.sign(adminForToken, process.env.SECRET);
+
+    res.send({
+      id: admin.id,
+      role: admin.role,
+      name: admin.name,
+      dni: admin.dni,
+      address: admin.address,
+      phone: admin.phone,
+      age: admin.age,
+      permissions: admin.permissions,
+      crudAdmin: admin.crudAdmin,
+      agentsID: admin.agentsID,
       token,
     });
   }
