@@ -39,37 +39,6 @@ Deploy: https://inmobil-app.herokuapp.com/
   <li><a href="#delete-api-clients-id-refs">DELETE /api/clients/:id</a></li>
 </ul>
 
-# Schemas
-
-<h3 id="admin-schema-refs"><a href="#admin-schema-refs">Admin Schema</a></h3>
-
-```javascript
-const adminSchema = new moongose.Schema({
-  name: String,
-  DNI: {
-    type: String,
-    unique: true,
-  },
-  address: String,
-  phone: String,
-  age: {
-    type: Number,
-    min: 0,
-    max: 120,
-  },
-  permissions: {
-    crudAgent: Boolean,
-    crudAdmin: Boolean,
-  },
-  agentsID: [
-    {
-      type: moongose.Schema.Types.ObjectId,
-      ref: "Agent",
-    },
-  ],
-});
-```
-
 # Routes
 
 Cuando pasa una ruta desconocida para el "Servidor"
@@ -88,6 +57,49 @@ Cuando ocurre un error al hacer un PUT o POST con el Schema va a retornar un mes
 
 ```javascript
 response.status(400).json({ error: error.message });
+```
+
+<h3 id="admin-schema-refs"><a href="#admin-schema-refs">Admin Schema</a></h3>
+
+```javascript
+const adminSchema = new moongose.Schema({
+  name: String,
+  dni: {
+    type: String,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  address: String,
+  phone: String,
+  age: {
+    type: Number,
+    min: 0,
+    max: 120,
+  },
+  permissions: {
+    crudAgent: {
+      type: Boolean,
+      default: true,
+    },
+    crudAdmin: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  agentsID: [
+    {
+      type: moongose.Schema.Types.ObjectId,
+      ref: "Agent",
+    },
+  ],
+  role: {
+    type: String,
+    default: "ADMIN",
+  },
+});
 ```
 
 ## Ruta: "/api/admins"
@@ -125,11 +137,7 @@ Cuando se hace un POST de un Admin no, se nesecita especificar el Agent que tien
   "address": "Calle 22B",
   "phone": "322 548 7898",
   "password": "password",
-  "age": 50,
-  "permissions": {
-    "crudAgent": true,
-    "crudAdmin": true
-  }
+  "age": 50
 }
 ```
 
@@ -148,7 +156,7 @@ Retorna
   },
   "agentsID": [],
   "role": "ADMIN",
-  "id": "6217bf128b96709a231f864a"
+  "id": "62185cdd53f1f620d9812fc8"
 }
 ```
 
