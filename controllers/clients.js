@@ -35,8 +35,7 @@ clientsRouter.get("/:id", async (req, res) => {
     : res.status(404).json({ text: "The client does not exist" });
 });
 
-clientsRouter.put("/:id", async (req, res) => {
-  const { id } = req.params;
+clientsRouter.put("/", async (req, res) => {
   let { ...update } = req.body;
 
   // Validación para actualizar datos del cliente_____________________________________
@@ -50,8 +49,8 @@ clientsRouter.put("/:id", async (req, res) => {
   }
 
   let decodedToken = {};
-
   decodedToken = jwt.verify(token, process.env.SECRET);
+
   if (update.dni)
     return res.status(403).json({ text: "You can not change your dni number" });
 
@@ -61,6 +60,7 @@ clientsRouter.put("/:id", async (req, res) => {
   }
 
   if (update.password && update.newPassword) {
+    const { id } = decodedToken; // Obtengo el id del usuario
     const client = await Client.findById(id);
     const passwordCorrect = await bcrypt.compare(
       update.password,
