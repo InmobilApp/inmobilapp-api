@@ -16,7 +16,7 @@ const agentSchema = new Schema({
   },
   role: {
     type: String,
-    default: "Agent",
+    default: "AGENT",
   },
   address: {
     type: String,

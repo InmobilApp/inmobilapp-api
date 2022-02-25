@@ -12,7 +12,7 @@ const clientSchema = new Schema({
   },
   role: {
     type: String,
-    default: "Client",
+    default: "CLIENT",
   },
   password: {
     type: String,
