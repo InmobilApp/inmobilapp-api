@@ -1,12 +1,12 @@
-const moongose = require('mongoose');
-const { Schema } = require('mongoose');
+const moongose = require("mongoose");
+const { Schema } = require("mongoose");
 
 const propertySchema = new moongose.Schema({
   typeProperty: {
     type: String,
     enum: {
-      values: ['casa', 'apartamento', 'local', 'finca'],
-      message: '{VALUE} is not supported',
+      values: ["casa", "apartamento", "local", "finca"],
+      message: "{VALUE} is not supported",
     },
   },
   date: {
@@ -22,10 +22,10 @@ const propertySchema = new moongose.Schema({
   state: {
     type: String,
     enum: {
-      values: ['available', 'unavailable', 'reserved'],
-      message: '{VALUE} is not supported',
+      values: ["available", "unavailable", "reserved"],
+      message: "{VALUE} is not supported",
     },
-    default: 'available',
+    default: "available",
   },
   rentalPrice: {
     type: Number,
@@ -35,7 +35,7 @@ const propertySchema = new moongose.Schema({
   reviews: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Review',
+      ref: "Review",
     },
   ],
   description: {
@@ -62,11 +62,17 @@ const propertySchema = new moongose.Schema({
   },
   agentID: {
     type: Schema.Types.ObjectId,
-    ref: 'Agent',
+    ref: "Agent",
   },
+  clientsID: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Client",
+    },
+  ],
 });
 
-propertySchema.set('toJSON', {
+propertySchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -74,4 +80,4 @@ propertySchema.set('toJSON', {
   },
 });
 
-module.exports = moongose.model('Property', propertySchema);
+module.exports = moongose.model("Property", propertySchema);

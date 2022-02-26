@@ -5,19 +5,16 @@ const Property = require("../models/property");
 const jwt = require("jsonwebtoken");
 
 clientsRouter.post("/", async (req, res) => {
-  const { name, dni, password, address, phone, age } = req.body;
+  const { password, ...newClient } = req.body;
 
   const passwordHash = await bcrypt.hash(password, 10);
-  const newClient = new Client({
-    name,
-    dni,
+
+  const client = new Client({
+    ...newClient,
     password: passwordHash,
-    address,
-    phone,
-    age,
   });
 
-  const savedClient = await newClient.save();
+  const savedClient = await client.save();
   res.status(201).json(savedClient).end();
 });
 
@@ -29,7 +26,9 @@ clientsRouter.get("/", async (req, res) => {
 clientsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const clients = await Client.findById(id).populate("propertyID");
+  const clients = await Client.findById(id)
+    .populate("propertyID")
+    .populate("favoriteProperties");
   clients
     ? res.json(clients).end()
     : res.status(404).json({ text: "The client does not exist" });
@@ -53,6 +52,35 @@ clientsRouter.put("/", async (req, res) => {
 
   if (update.dni)
     return res.status(403).json({ text: "You can not change your dni number" });
+
+  if (update.favPropertyID) {
+    const property = await Property.findById(update.favPropertyID);
+    if (property) {
+      const { id } = decodedToken; // Obtengo el id del usuario
+      const client = await Client.findById(id);
+
+      if (client.favoriteProperties.includes(update.favPropertyID)) {
+        return res.status(400).json({
+          msg: `FavpropertyID: ${update.favPropertyID} is already in favoriteProperties`,
+        });
+      }
+      client.favoriteProperties.push(property._id.toString());
+      await client.save();
+
+      if (!property.clientsID.includes(id)) {
+        property.clientsID.push(client._id.toString());
+        await property.save();
+      }
+
+      const clientUpdated = await Client.findByIdAndUpdate(id, client, {
+        new: true,
+      });
+
+      clientUpdated
+        ? res.json(clientUpdated).end()
+        : res.status(404).json({ text: "The client does not exist" });
+    }
+  }
 
   if (update.propertyID) {
     const property = await Property.findById(update.propertyID);
@@ -86,6 +114,7 @@ clientsRouter.put("/", async (req, res) => {
 
 clientsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
+  const { deleteFavoriteProperties } = req.query;
 
   const authorization = req.get("authorization");
   let token = null;
@@ -96,9 +125,45 @@ clientsRouter.delete("/:id", async (req, res) => {
     token = authorization.substring(7);
   }
 
-  let decodedToken = {};
+  jwt.verify(token, process.env.SECRET);
 
-  decodedToken = jwt.verify(token, process.env.SECRET);
+  const client = await Client.findById(id);
+
+  if (!client)
+    return res.status(404).json({ msg: "The client was not found in the DB" });
+
+  if (deleteFavoriteProperties) {
+    client.favoriteProperties = [];
+    await client.save();
+  }
+
+  res.json({ msg: "The favorites properties of client were deleted" }).end();
+});
+
+clientsRouter.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const authorization = req.get("authorization");
+  let token = null;
+
+  if (authorization && authorization.toLocaleLowerCase().startsWith("bearer")) {
+    // authorization = 'Bearer 46as4dq8w5e4q5w4x4'
+    // token = authorization.split(' ')[1] -> Otra forma de sacar el token
+    token = authorization.substring(7);
+  }
+
+  jwt.verify(token, process.env.SECRET);
+
+  const client = await Client.findById(id);
+
+  if (!client)
+    return res.status(404).json({ msg: "The client was not found in the DB" });
+
+  if (client.favoriteProperties.length > 0)
+    return res
+      .status(400)
+      .json({ msg: "You can not delete clients with favorite properties" });
+
   await Client.findByIdAndDelete(id);
   res.json({ msg: "Client deleted" }).end();
 });
