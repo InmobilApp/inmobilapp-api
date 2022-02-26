@@ -24,6 +24,12 @@ const clientSchema = new Schema({
   },
   phone: String,
   age: String,
+  favoriteProperties: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Property",
+    },
+  ],
   permissions: {
     crudClient: Boolean,
   },
