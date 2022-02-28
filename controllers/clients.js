@@ -103,6 +103,7 @@ clientsRouter.put("/", async (req, res) => {
     update.password = newPasswordHash;
   }
 
+  const { id } = decodedToken;
   const clientUpdated = await Client.findByIdAndUpdate(id, update, {
     new: true,
   });
