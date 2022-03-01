@@ -57,7 +57,7 @@ adminRouter.put("/:id", async (req, res) => {
       .json({ error: "You can not change your dni number" });
   }
 
-  let admin = {
+  let adminUpdate = {
     ...newAdminInfo,
   };
 
@@ -71,13 +71,13 @@ adminRouter.put("/:id", async (req, res) => {
 
     const hashPassword = await bcrypt.hash(newPassword, 10);
 
-    admin = {
+    adminUpdate = {
       ...newAdminInfo,
       password: hashPassword,
     };
   }
 
-  const updatedAdmin = await Admin.findByIdAndUpdate(id, admin, {
+  const updatedAdmin = await Admin.findByIdAndUpdate(id, adminUpdate, {
     new: true,
   });
 
