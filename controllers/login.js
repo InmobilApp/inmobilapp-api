@@ -49,8 +49,9 @@ loginRouter.post("/", async (req, res) => {
       return res.status(401).json({ text: "Invalid dni or password" }).end();
 
     const agentForToken = {
-      id: agent._id,
+      userID: agent._id,
       dni: agent.dni,
+      role: agent.role,
     };
 
     const token = jwt.sign(agentForToken, process.env.SECRET);
@@ -78,8 +79,9 @@ loginRouter.post("/", async (req, res) => {
       return res.status(401).json({ text: "Invalid dni or password" }).end();
 
     const adminForToken = {
-      id: admin._id,
+      userID: admin._id,
       dni: admin.dni,
+      role: admin.role,
     };
 
     const token = jwt.sign(adminForToken, process.env.SECRET);
