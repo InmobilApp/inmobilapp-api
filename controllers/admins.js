@@ -49,7 +49,7 @@ adminRouter.put("/:id", async (req, res) => {
 
   jwt.verify(token, process.env.SECRET);
 
-  const { id, password, dni, ...newAdminInfo } = req.body;
+  const { id, password, dni, newPassword, ...newAdminInfo } = req.body;
 
   if (dni) {
     return res
@@ -61,8 +61,15 @@ adminRouter.put("/:id", async (req, res) => {
     ...newAdminInfo,
   };
 
-  if (password) {
-    const hashPassword = await bcrypt.hash(password, 10);
+  const admin = await Admin.findById(id);
+  if (!admin) return res.status(404).end();
+
+  if (password && newPassword) {
+    const passwordCorrect = await bcrypt.compare(password, admin.password);
+
+    if (!(admin && passwordCorrect)) return res.status(401).end();
+
+    const hashPassword = await bcrypt.hash(newPassword, 10);
 
     admin = {
       ...newAdminInfo,
