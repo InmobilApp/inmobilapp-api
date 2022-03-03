@@ -115,34 +115,6 @@ clientsRouter.put("/", async (req, res) => {
 
 clientsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const { deleteFavoriteProperties } = req.query;
-
-  const authorization = req.get("authorization");
-  let token = null;
-
-  if (authorization && authorization.toLocaleLowerCase().startsWith("bearer")) {
-    // authorization = 'Bearer 46as4dq8w5e4q5w4x4'
-    // token = authorization.split(' ')[1] -> Otra forma de sacar el token
-    token = authorization.substring(7);
-  }
-
-  jwt.verify(token, process.env.SECRET);
-
-  const client = await Client.findById(id);
-
-  if (!client)
-    return res.status(404).json({ msg: "The client was not found in the DB" });
-
-  if (deleteFavoriteProperties) {
-    client.favoriteProperties = [];
-    await client.save();
-  }
-
-  res.json({ msg: "The favorites properties of client were deleted" }).end();
-});
-
-clientsRouter.delete("/:id", async (req, res) => {
-  const { id } = req.params;
 
   const authorization = req.get("authorization");
   let token = null;
@@ -167,6 +139,33 @@ clientsRouter.delete("/:id", async (req, res) => {
 
   await Client.findByIdAndDelete(id);
   res.json({ msg: "Client deleted" }).end();
+});
+
+clientsRouter.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { deleteFavoriteProperties } = req.query;
+
+  const authorization = req.get("authorization");
+  let token = null;
+
+  if (authorization && authorization.toLocaleLowerCase().startsWith("bearer")) {
+    // authorization = 'Bearer 46as4dq8w5e4q5w4x4'
+    // token = authorization.split(' ')[1] -> Otra forma de sacar el token
+    token = authorization.substring(7);
+  }
+
+  jwt.verify(token, process.env.SECRET);
+
+  const client = await Client.findById(id);
+
+  if (!client)
+    return res.status(404).json({ msg: "The client was not found in the DB" });
+
+  if (deleteFavoriteProperties) {
+    client.favoriteProperties = [];
+    await client.save();
+    res.json({ msg: "The favorites properties of client were deleted" }).end();
+  }
 });
 
 module.exports = clientsRouter;

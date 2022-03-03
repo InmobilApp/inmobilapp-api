@@ -6,20 +6,53 @@ const Agent = require("../models/agent");
 const Admin = require("../models/admin");
 
 loginRouter.post("/", async (req, res) => {
-  const { dni, password } = req.body;
+  const { dni, password, email } = req.body;
+  if (dni && password) {
+    const client = await Client.findOne({ dni });
 
-  const client = await Client.findOne({ dni });
+    if (client) {
+      const passwordCorrect = await bcrypt.compare(password, client.password);
 
-  if (client) {
-    const passwordCorrect = await bcrypt.compare(password, client.password);
+      if (!passwordCorrect) {
+        return res.status(401).json({ text: "Invalid dni or password" }).end();
+      }
 
-    if (!passwordCorrect) {
-      return res.status(401).json({ text: "Invalid dni or password" }).end();
+      const clientForToken = {
+        id: client._id,
+        dni: client.dni,
+        email: client.email,
+      };
+
+      const token = jwt.sign(clientForToken, process.env.SECRET);
+
+      res.send({
+        id: client.id,
+        name: client.name,
+        dni: client.dni,
+        email: client.email,
+        role: client.role,
+        address: client.address,
+        phone: client.phone,
+        age: client.age,
+        favoriteProperties: client.favoriteProperties,
+        payDay: client.payDay,
+        paymentIssued: client.paymentIssued,
+        propertyID: client.propertyID,
+        token,
+      });
+    }
+  }
+  if (email) {
+    const client = await Client.findOne({ email });
+
+    if (!client) {
+      return res.status(401).json({ text: "Invalid email" }).end();
     }
 
     const clientForToken = {
       id: client._id,
       dni: client.dni,
+      email: client.email,
     };
 
     const token = jwt.sign(clientForToken, process.env.SECRET);
@@ -28,6 +61,7 @@ loginRouter.post("/", async (req, res) => {
       id: client.id,
       name: client.name,
       dni: client.dni,
+      email: client.email,
       role: client.role,
       address: client.address,
       phone: client.phone,
