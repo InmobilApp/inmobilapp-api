@@ -31,7 +31,10 @@ const agentSchema = new Schema({
     },
   ],
   permissions: {
-    crudProperty: Boolean,
+    crudProperty: {
+      type: Boolean,
+      default: true,
+    },
   },
   admindID: {
     type: Schema.Types.ObjectID,
