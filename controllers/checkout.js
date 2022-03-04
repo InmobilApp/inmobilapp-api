@@ -11,7 +11,7 @@ checkoutRouter.post('/', async (req, res)=>{
   const {title, unit_price, quantity} = req.body
   let preference = {
     items: [
-      {
+      { 
         title: 'My Item',
         unit_price: 1,
         quantity: 1,
