@@ -2,7 +2,7 @@ const checkoutRouter = require('express').Router()
 const mercadoP = require('mercadopago');
 
 mercadoP.configure({
-    access_token: 'TEST-5855040900207495-030216-8b432e2f0a0a1598dda338b40156561c-460318749'
+    access_token: "TEST-3654398483251205-030418-77f3aadc4ce3f0ab0371280938803852-460318749",
 });
 
 
