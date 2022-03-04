@@ -12,6 +12,7 @@ const clientsRouter = require('./controllers/clients');
 const middleware = require('./utils/middleware');
 const reviewRouter = require('./controllers/reviews');
 const loginRouter = require('./controllers/login');
+const checkout = require('./controllers/checkout');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use('/api/agents', agentsRouter);
 app.use('/api/clients', clientsRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/login', loginRouter);
+app.use('/checkout', checkout);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
