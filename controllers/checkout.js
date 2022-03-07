@@ -15,11 +15,14 @@ const createorder = async (req, res) => {
       {
         title: title,
         quantity: 1,
-        currency_id: "COP",
+        currency_id: "ARS",
         unit_price: price,
       },
     ],
-    notification_url: "http://localhost:3001/api/notification",
+    back_urls: {
+      success: "http://localhost:3001/api/checkout/approved",
+      failure: "http://localhost:3001/api/checkout/approved",
+    },
   };
 
   mercadopago.preferences
@@ -33,7 +36,7 @@ const createorder = async (req, res) => {
     });
 };
 
-const notification = async (req, res) => {
+const approved = async (req, res) => {
   const data = req.query;
 
   console.log(data);
@@ -41,6 +44,6 @@ const notification = async (req, res) => {
 };
 
 checkoutRouter.post("/", createorder);
-checkoutRouter.post("/notification", notification);
+checkoutRouter.post("/approved", approved);
 
 module.exports = checkoutRouter;
