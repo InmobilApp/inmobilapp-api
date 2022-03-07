@@ -12,11 +12,7 @@ const adminSchema = new moongose.Schema({
   },
   address: String,
   phone: String,
-  age: {
-    type: Number,
-    min: 0,
-    max: 120,
-  },
+  age: String,
   permissions: {
     crudAgent: {
       type: Boolean,
