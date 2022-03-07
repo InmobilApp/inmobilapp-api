@@ -1,5 +1,6 @@
 const sendEmailRouter = require("express").Router();
 const nodemailer = require("nodemailer");
+const { PASSWORD_INMOBILAPP } = require("../utils/config");
 
 const createTransporter = () =>
   nodemailer.createTransport({
@@ -11,7 +12,7 @@ const createTransporter = () =>
     },
     auth: {
       user: "inmobilApp@outlook.com",
-      pass: "K[e<6$e:",
+      pass: PASSWORD_INMOBILAPP,
     },
   });
 
