@@ -1,9 +1,10 @@
 const nodeMailer= require('nodemailer');
+const { Hello } = require('./hello_template');
 
 exports.sendMail=(req,res)=>{
     console.log('req body',req.body);
     let userMail= req.body.userEmail;
-    let userMessage=req.body.message;
+    let userName=req.body.userName;
 
     let transporter=nodeMailer.createTransport({
         service:'gmail',
@@ -16,8 +17,8 @@ exports.sendMail=(req,res)=>{
     let message={
         from:process.env.EMAIL,
         to: userMail,
-        subject:'mensaje de prueba',
-        text: userMessage,
+        subject:  ` Hola ${userName}!`,
+        html:Hello()
         //aca va el html tambien con el cuerpo del msj
     }
 
