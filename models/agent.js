@@ -40,6 +40,12 @@ const agentSchema = new Schema({
     type: Schema.Types.ObjectID,
     ref: "Admin",
   },
+  clientsID: [
+    {
+      type: Schema.Types.ObjectID,
+      ref: "Client",
+    },
+  ],
 });
 
 agentSchema.set("toJSON", {

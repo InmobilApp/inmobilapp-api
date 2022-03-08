@@ -62,21 +62,6 @@ agentsRouter.put("/", async (req, res) => {
     return res.status(403).json({ text: "You do not have permissions!" });
   }
 
-  if (update.permissions) {
-    if (role === "AGENT")
-      return res
-        .status(403)
-        .json({ text: "You can not change your permissions" });
-    if (role === "ADMIN") {
-      const agentUpdated = await Agent.findByIdAndUpdate(agentID, update, {
-        new: true,
-      });
-      agentUpdated
-        ? res.json(agentUpdated).end()
-        : res.status(404).json({ test: "The agent does not exist" }).end();
-    }
-  }
-
   if (update.password && update.newPassword) {
     if (role === "AGENT") {
       const agent = await Agent.findById(userID);
