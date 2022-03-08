@@ -15,20 +15,21 @@ const createorder = async (req, res) => {
       {
         title: title,
         quantity: 1,
-        currency_id: "ARS",
+        currency_id: "USD",
         unit_price: price,
       },
     ],
     back_urls: {
-      success: "http://localhost:3001/api/checkout/approved",
+      success: "http://localhost:3000/",
       failure: "http://localhost:3001/api/checkout/approved",
+      pending: "",
     },
+    auto_return: "approved",
   };
 
   mercadopago.preferences
     .create(preference)
     .then((r) => {
-      console.log(r);
       return res.send(r.body.id);
     })
     .catch((err) => {
@@ -37,13 +38,21 @@ const createorder = async (req, res) => {
 };
 
 const approved = async (req, res) => {
-  const data = req.query;
+  console.log("entré a approved");
+  console.log("--------req.query--------------", req.query);
+  res.status(200);
+};
 
-  console.log(data);
+const failure = (req, res) => {
+  console.log("entré");
+  console.log("------------------failure-------", req.body);
+  console.log("----------------------------", req.query);
+  console.log("------------------------------", req.params);
   res.status(200);
 };
 
 checkoutRouter.post("/", createorder);
-checkoutRouter.post("/approved", approved);
+checkoutRouter.get("/approved", approved);
+checkoutRouter.post("/failure", failure);
 
 module.exports = checkoutRouter;
