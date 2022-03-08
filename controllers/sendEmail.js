@@ -1,18 +1,15 @@
 const sendEmailRouter = require("express").Router();
 const nodemailer = require("nodemailer");
-const { PASSWORD_INMOBILAPP } = require("../utils/config");
+const { EMAIL, PASSWORD } = require("../utils/config");
 
 const createTransporter = () =>
   nodemailer.createTransport({
-    host: "smtp-mail.outlook.com",
-    secure: false,
-    port: 587,
-    tls: {
-      ciphers: "SSLv3",
-    },
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
-      user: "inmobilApp@outlook.com",
-      pass: PASSWORD_INMOBILAPP,
+      user: EMAIL,
+      pass: PASSWORD,
     },
   });
 
@@ -27,13 +24,14 @@ sendEmailRouter.post("/", (req, res) => {
 
   transporter.sendMail(
     {
-      from: "inmobilApp@outlook.com",
+      from: EMAIL,
       to: email,
       subject: `Hola ${name}`,
       html: template,
     },
     (err, info) => {
       if (err) {
+        console.log(err);
         return res.status(404).end();
       }
       return res.json(info.response);

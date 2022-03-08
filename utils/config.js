@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { PORT, PASSWORD_INMOBILAPP } = process.env;
+const { PORT, PASSWORD_INMOBILAPP, PASSWORD, EMAIL } = process.env;
 const MONGODB_URI =
   process.env.NODE_ENV === "development"
     ? process.env.MONGODB_URI_TEST
@@ -10,4 +10,6 @@ module.exports = {
   PORT,
   MONGODB_URI,
   PASSWORD_INMOBILAPP,
+  PASSWORD,
+  EMAIL,
 };
