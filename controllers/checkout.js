@@ -1,7 +1,7 @@
 const checkoutRouter = require("express").Router();
 const mercadopago = require("mercadopago");
 
-const createorder = async (req, res) => {
+const createOrder = async (req, res) => {
   //TEST-3793295535523231-030506-300abfd4672588102dc3dca173408d87-1084485093
   const { title, price } = req.body;
   mercadopago.configure({
@@ -20,9 +20,8 @@ const createorder = async (req, res) => {
       },
     ],
     back_urls: {
-      success: "http://localhost:3000/",
-      failure: "http://localhost:3001/api/checkout/approved",
-      pending: "",
+      success: "http://localhost:3001/api/checkout/approved",
+      failure: "http://localhost:3001/api/checkout/feedback",
     },
     auto_return: "approved",
   };
@@ -51,7 +50,7 @@ const failure = (req, res) => {
   res.status(200);
 };
 
-checkoutRouter.post("/", createorder);
+checkoutRouter.post("/", createOrder);
 checkoutRouter.get("/approved", approved);
 checkoutRouter.post("/failure", failure);
 

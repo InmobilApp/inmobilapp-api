@@ -9,17 +9,11 @@ const adminRouter = require("./controllers/admins");
 const propertyRouter = require("./controllers/Properties");
 const agentsRouter = require("./controllers/agents");
 const clientsRouter = require("./controllers/clients");
-<<<<<<< HEAD
 const middleware = require("./utils/middleware");
 const reviewRouter = require("./controllers/reviews");
 const loginRouter = require("./controllers/login");
 const checkout = require("./controllers/checkout");
-=======
 const sendEmailRouter = require("./controllers/sendEmail");
-const middleware = require("./utils/middleware");
-const reviewRouter = require("./controllers/reviews");
-const loginRouter = require("./controllers/login");
->>>>>>> 89d8c8ccd4a2402d2a2d6111bd00f107790874ca
 const Mail = require("./Newsletter/routes/mail");
 
 const app = express();
@@ -54,11 +48,8 @@ app.use("/api/agents", agentsRouter);
 app.use("/api/clients", clientsRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/login", loginRouter);
-<<<<<<< HEAD
 app.use("/api/checkout", checkout);
-=======
 app.use("/api/sendemail", sendEmailRouter);
->>>>>>> 89d8c8ccd4a2402d2a2d6111bd00f107790874ca
 app.use("/api", Mail);
 
 app.use(middleware.unknownEndpoint);
