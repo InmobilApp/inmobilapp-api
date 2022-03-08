@@ -31,8 +31,7 @@ sendEmailRouter.post("/", (req, res) => {
     },
     (err, info) => {
       if (err) {
-        console.log(err);
-        return res.status(404).end();
+        return res.status(404).json(err);
       }
       return res.json(info.response);
     }
