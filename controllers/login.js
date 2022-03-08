@@ -71,6 +71,7 @@ loginRouter.post("/", async (req, res) => {
       payDay: client.payDay,
       paymentIssued: client.paymentIssued,
       propertyID: client.propertyID,
+      propertyRequest: client.propertyRequest,
       token,
     });
   }

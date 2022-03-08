@@ -89,13 +89,15 @@ clientsRouter.put("/", async (req, res) => {
 
     const client = await Client.findById(clientID);
     const agent = await Agent.findById(agentID);
+
     if (client.propertyID)
       res.status(400).json({
         text: `The client already has a property assigned. The ID of that property is: ${client.propertyID}`,
       });
 
-    if (!(client.propertyID.toString() === propertyID)) {
+    if (!(client.propertyID && client.propertyID.toString() === propertyID)) {
       client.propertyID = propertyID;
+      client.propertyRequest = true;
       agent.clientsID = agent.clientsID.concat(clientID);
       await agent.save();
 
