@@ -13,6 +13,7 @@ const sendEmailRouter = require("./controllers/sendEmail");
 const middleware = require("./utils/middleware");
 const reviewRouter = require("./controllers/reviews");
 const loginRouter = require("./controllers/login");
+const paymentRouter = require("./controllers/payment");
 const Mail = require("./Newsletter/routes/mail");
 
 const app = express();
@@ -48,6 +49,7 @@ app.use("/api/clients", clientsRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/sendemail", sendEmailRouter);
+app.use("/api/payment", paymentRouter);
 app.use("/api", Mail);
 
 app.use(middleware.unknownEndpoint);
