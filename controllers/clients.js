@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const clientsRouter = require("express").Router();
 const Client = require("../models/client");
 const Property = require("../models/property");
+const Agent = require("../models/agent");
 const jwt = require("jsonwebtoken");
 
 clientsRouter.post("/", async (req, res) => {
@@ -83,8 +84,32 @@ clientsRouter.put("/", async (req, res) => {
   }
 
   if (update.propertyID) {
-    const property = await Property.findById(update.propertyID);
-    update.propertyID = property._id;
+    const { propertyID, clientID } = update;
+    const { agentID } = decodedToken;
+
+    const client = await Client.findById(clientID);
+    const agent = await Agent.findById(agentID);
+    if (client.propertyID)
+      res.status(400).json({
+        text: `The client already has a property assigned. The ID of that property is: ${client.propertyID}`,
+      });
+
+    if (!(client.propertyID.toString() === propertyID)) {
+      client.propertyID = propertyID;
+      agent.clientsID = agent.clientsID.concat(clientID);
+      await agent.save();
+
+      const clientUpdated = await Client.findByIdAndUpdate(clientID, client, {
+        new: true,
+      });
+
+      clientUpdated
+        ? res.json(clientUpdated).end()
+        : res.status(404).json({ text: "The client does not exist" });
+    } else
+      return res
+        .status(400)
+        .json({ text: "The client already has that property assigned" });
   }
 
   if (update.password && update.newPassword) {

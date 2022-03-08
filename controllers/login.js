@@ -38,6 +38,7 @@ loginRouter.post("/", async (req, res) => {
         payDay: client.payDay,
         paymentIssued: client.paymentIssued,
         propertyID: client.propertyID,
+        agentID: client.agentID,
         token,
       });
     }
@@ -83,7 +84,7 @@ loginRouter.post("/", async (req, res) => {
       return res.status(401).json({ text: "Invalid dni or password" }).end();
 
     const agentForToken = {
-      userID: agent._id,
+      agentID: agent._id,
       dni: agent.dni,
       role: agent.role,
     };
