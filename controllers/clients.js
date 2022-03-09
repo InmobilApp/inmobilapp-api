@@ -149,6 +149,9 @@ clientsRouter.put("/", async (req, res) => {
     if (!(client.propertyID && client.propertyID.toString() === propertyID)) {
       client.propertyID = propertyID;
       client.propertyRequest = true;
+      const fechaActual = new Date();
+      const fecha = `${fechaActual.getDay()}/${fechaActual.getMonth()}/${fechaActual.getFullYear()}`;
+      client.payDay = fecha;
       agent.clientsID = agent.clientsID.concat(clientID);
       await agent.save();
 
