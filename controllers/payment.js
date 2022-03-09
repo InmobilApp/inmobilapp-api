@@ -61,7 +61,7 @@ paymentRouter.get("/capture", async (req, res) => {
     }
   );
 
-  return res.send(Capture("Pago Realizado!", resp.data));
+  return res.send(Capture("Pago Realizado!"));
 });
 
 paymentRouter.get("/cancel", (req, res) => {
