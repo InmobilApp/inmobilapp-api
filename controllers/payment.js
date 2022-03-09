@@ -6,7 +6,7 @@ const {
   PAYPAL_API_SECRET,
 } = require("../utils/config");
 
-const { Capture } = require("../templates/capture");
+const Capture = require("../templates/capture");
 
 const baseUrl = "https://inmobil-app-api.herokuapp.com";
 

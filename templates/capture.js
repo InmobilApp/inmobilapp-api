@@ -1,4 +1,4 @@
-export function Capture(success, data) {
+function Capture(success, data) {
   return `<!DOCTYPE html>
     <html lang="es">
       <head>
@@ -25,3 +25,5 @@ export function Capture(success, data) {
       </body>
     </html>`;
 }
+
+module.exports = Capture;
