@@ -140,6 +140,7 @@ clientsRouter.put("/", async (req, res) => {
 
     const client = await Client.findById(clientID);
     const agent = await Agent.findById(agentID);
+    const property = await Property.findById(propertyID);
 
     if (client.propertyID)
       res.status(400).json({
@@ -152,6 +153,10 @@ clientsRouter.put("/", async (req, res) => {
       const fechaActual = new Date();
       const fecha = `${fechaActual.getDay()}/${fechaActual.getMonth()}/${fechaActual.getFullYear()}`;
       client.payDay = fecha;
+
+      property.state = "reserved";
+      await property.save();
+
       agent.clientsID = agent.clientsID.concat(clientID);
       await agent.save();
 
