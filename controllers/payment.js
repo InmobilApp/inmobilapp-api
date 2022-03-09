@@ -6,6 +6,8 @@ const {
   PAYPAL_API_SECRET,
 } = require("../utils/config");
 
+const { Capture } = require("../templates/capture");
+
 const baseUrl = "https://inmobil-app-api.herokuapp.com";
 
 paymentRouter.post("/create", async (req, res) => {
@@ -59,11 +61,11 @@ paymentRouter.get("/capture", async (req, res) => {
     }
   );
 
-  return res.send(resp.data);
+  return res.send(Capture("Pago Realizado!", resp.data));
 });
 
 paymentRouter.get("/cancel", (req, res) => {
-  res.json("Pago Cancelado!");
+  res.json(Capture("No se relizo el pago!"));
 });
 
 module.exports = paymentRouter;
