@@ -10,8 +10,8 @@ const Client = require("../models/client");
 
 const Capture = require("../templates/capture");
 
-// const baseUrl = "https://inmobil-app-api.herokuapp.com";
-const baseUrl = "http://localhost:3001";
+const baseUrl = "https://inmobil-app-api.herokuapp.com";
+//const baseUrl = "http://localhost:3001";
 
 paymentRouter.post("/create", async (req, res) => {
   const { description, value } = req.body;
