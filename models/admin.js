@@ -1,9 +1,10 @@
-const moongose = require('mongoose');
+const moongose = require("mongoose");
 
 const adminSchema = new moongose.Schema({
   name: String,
   dni: {
     type: String,
+    required: true,
     unique: true,
   },
   password: {
@@ -26,16 +27,16 @@ const adminSchema = new moongose.Schema({
   agentsID: [
     {
       type: moongose.Schema.Types.ObjectId,
-      ref: 'Agent',
+      ref: "Agent",
     },
   ],
   role: {
     type: String,
-    default: 'ADMIN',
+    default: "ADMIN",
   },
 });
 
-adminSchema.set('toJSON', {
+adminSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -44,4 +45,4 @@ adminSchema.set('toJSON', {
   },
 });
 
-module.exports = moongose.model('Admin', adminSchema);
+module.exports = moongose.model("Admin", adminSchema);
