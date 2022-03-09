@@ -154,11 +154,10 @@ clientsRouter.put("/", async (req, res) => {
 
       const clientUpdated = await Client.findByIdAndUpdate(clientID, client, {
         new: true,
-      });
+      }).populate("propertyID");
 
-      clientUpdated
-        ? res.json(clientUpdated).end()
-        : res.status(404).json({ text: "The client does not exist" });
+      if (clientUpdated) return res.json(clientUpdated).end();
+      else return res.status(404).json({ text: "The client does not exist" });
     } else
       return res
         .status(400)
