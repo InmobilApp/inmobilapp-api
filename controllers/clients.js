@@ -90,6 +90,12 @@ clientsRouter.put("/", async (req, res) => {
   if (update.delPropertyID) {
     const { clientID } = update;
     const client = await Client.findById(clientID);
+
+    const propertyID = client.propertyID;
+    const property = await Property.findById(propertyID);
+    property.state = "available";
+    await property.save();
+
     client.propertyID = null;
     client.propertyRequest = false;
 
