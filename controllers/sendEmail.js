@@ -15,7 +15,6 @@ const createTransporter = () =>
 
 sendEmailRouter.post("/", (req, res) => {
   const { email, template, name } = req.body;
-
   if (!email && !template) {
     return res.status(404).end();
   }

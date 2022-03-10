@@ -157,7 +157,7 @@ clientsRouter.put("/", async (req, res) => {
       client.propertyID = propertyID;
       client.propertyRequest = true;
       const fechaActual = new Date();
-      const fecha = `${fechaActual.getDay()}/${fechaActual.getMonth()}/${fechaActual.getFullYear()}`;
+      const fecha = `${fechaActual.getDate()}/${fechaActual.getMonth()}/${fechaActual.getFullYear()}`;
       client.payDay = fecha;
 
       property.state = "reserved";
