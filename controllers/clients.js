@@ -89,7 +89,12 @@ clientsRouter.put("/", async (req, res) => {
 
   if (update.delPropertyID) {
     const { clientID } = update;
+    const { agentID } = decodedToken;
     const client = await Client.findById(clientID);
+
+    // const agent = await Agent.findById(agentID);
+    // agent.clientsID = agent.clientsID.filter((id) => id != delPropertyID);
+    // await agent.save();
 
     const propertyID = client.propertyID;
     const property = await Property.findById(propertyID);
@@ -165,7 +170,11 @@ clientsRouter.put("/", async (req, res) => {
       property.state = "reserved";
       await property.save();
 
-      agent.clientsID = agent.clientsID.concat(clientID);
+      agent.clientsID = !agent.clientsID.includes(clientID)
+        ? agent.clientsID.push(clientID)
+        : res.status(400).json({
+            msg: `The agent already has that client id assigned. ClientID: ${clientID}`,
+          });
       await agent.save();
 
       const clientUpdated = await Client.findByIdAndUpdate(clientID, client, {
