@@ -14,7 +14,9 @@ agentsRouter.get("/:id", async (req, res) => {
   const { detailsProperties } = req.query;
 
   if (detailsProperties === "true") {
-    const completAgentInfo = await Agent.findById(id).populate("properties");
+    const completAgentInfo = await Agent.findById(id)
+      .populate("properties")
+      .populate("clientsID");
     completAgentInfo
       ? res.json(completAgentInfo).end()
       : res.status(404).json({ test: "The agent does not exist" }).end();
