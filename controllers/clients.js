@@ -165,7 +165,6 @@ clientsRouter.put("/", async (req, res) => {
         fechaActual.getMonth() + 1
       }/${fechaActual.getFullYear()}`;
       client.payDay = fecha;
-
       property.state = "unavailable";
       await property.save();
 
@@ -175,7 +174,7 @@ clientsRouter.put("/", async (req, res) => {
       //       msg: `The agent already has that client id assigned. ClientID: ${clientID}`,
       //     });
 
-      await agent.save();
+      // await agent.save();
 
       const clientUpdated = await Client.findByIdAndUpdate(clientID, client, {
         new: true,
