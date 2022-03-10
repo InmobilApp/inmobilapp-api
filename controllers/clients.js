@@ -167,7 +167,7 @@ clientsRouter.put("/", async (req, res) => {
       }/${fechaActual.getFullYear()}`;
       client.payDay = fecha;
 
-      property.state = "reserved";
+      property.state = "unavailable";
       await property.save();
 
       agent.clientsID = !agent.clientsID.includes(clientID)
