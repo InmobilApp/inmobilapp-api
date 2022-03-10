@@ -89,7 +89,7 @@ clientsRouter.put("/", async (req, res) => {
 
   if (update.delPropertyID) {
     const { clientID } = update;
-    const { agentID } = decodedToken;
+    // const { agentID } = decodedToken;
     const client = await Client.findById(clientID);
 
     // const agent = await Agent.findById(agentID);
@@ -148,7 +148,6 @@ clientsRouter.put("/", async (req, res) => {
   if (update.propertyID) {
     const { propertyID, clientID } = update;
     const { agentID } = decodedToken;
-
     const client = await Client.findById(clientID);
     const agent = await Agent.findById(agentID);
     const property = await Property.findById(propertyID);
@@ -162,19 +161,18 @@ clientsRouter.put("/", async (req, res) => {
       client.propertyID = propertyID;
       client.propertyRequest = true;
       const fechaActual = new Date();
-      const fecha = `${fechaActual.getDate()}/${
-        fechaActual.getMonth() + 1
-      }/${fechaActual.getFullYear()}`;
+      const fecha = `${fechaActual.getDate()}/${fechaActual.getMonth()}/${fechaActual.getFullYear()}`;
       client.payDay = fecha;
 
       property.state = "unavailable";
       await property.save();
 
-      agent.clientsID = !agent.clientsID.includes(clientID)
-        ? agent.clientsID.push(clientID)
-        : res.status(400).json({
-            msg: `The agent already has that client id assigned. ClientID: ${clientID}`,
-          });
+      // agent.clientsID = !agent.clientsID.includes(clientID)
+      //   ? agent.clientsID.push(clientID)
+      //   : res.status(400).json({
+      //       msg: `The agent already has that client id assigned. ClientID: ${clientID}`,
+      //     });
+
       await agent.save();
 
       const clientUpdated = await Client.findByIdAndUpdate(clientID, client, {
